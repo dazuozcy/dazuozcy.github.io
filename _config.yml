@@ -15,9 +15,9 @@ timezone: Asia/Shanghai
 
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # --------------------------
-title: dazuo                          # the main title
+title: zuo                          # the main title
 
-tagline: A text-focused Jekyll theme   # it will display as the sub-title
+tagline: "感谢永远有歌把心境道破"   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   A minimal, portfolio, sidebar,
