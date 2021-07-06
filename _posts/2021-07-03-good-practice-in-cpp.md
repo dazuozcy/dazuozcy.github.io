@@ -13,4 +13,9 @@ mermaid: true
 - 允许某些形式的优化
 - 减少代码膨胀
 
+[Why Not Specialize Function Templates?](http://gotw.ca/publications/mill17.htm)
+
+[深入理解特化与偏特化](https://sg-first.gitbooks.io/cpp-template-tutorial/content/jie_te_hua_yu_pian_te_hua.html)
+
+
 # Expression Template，奇异递归模板模式CRTP
