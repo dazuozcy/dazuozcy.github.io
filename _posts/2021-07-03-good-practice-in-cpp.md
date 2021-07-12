@@ -9,6 +9,18 @@ math: true
 mermaid: true
 ---
 
+```cpp
+static auto Anyone = [](auto&& k, auto&&... args) { return ((args == k) || ...); };
+
+string s="autumn";
+
+//等价于 if(s=="spring" || s== "summer" || s == "autumn" || s == "winter")
+if (Anyone(s, "spring", "summer", "autumn", "winter")) {
+    ...    
+}
+```
+
+
 # 模板特化
 - 允许某些形式的优化
 - 减少代码膨胀
