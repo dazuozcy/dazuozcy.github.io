@@ -21,6 +21,8 @@ if (Anyone(s, "spring", "summer", "autumn", "winter")) {
 ```
 
 
+[RAII妙用之计算函数耗时](https://zhuanlan.zhihu.com/p/139519294)
+
 # 模板特化
 - 允许某些形式的优化
 - 减少代码膨胀
