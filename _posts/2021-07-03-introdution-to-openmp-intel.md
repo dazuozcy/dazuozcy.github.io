@@ -12,7 +12,7 @@ mermaid: true
 这是一门非常优秀的OpenMP入门教程，讲解人也曾参与过OpenMP的开发。
 
 # 1. Introduction
-课程是`简洁的lectures+简短的execise`的方式，讲究边学边掌握。
+课程是`简洁的lectures + 简短的execise`的方式，讲究边学边练边掌握。
 
 课程由五大模块组成，每个模块由一系列单元和讨论组成：
 - Getting Started with OpenMP
@@ -24,7 +24,7 @@ mermaid: true
 总共27个lectures.
 
 # 2. Introduction to Parallel Programing Part1
-摩尔定律，芯片上更多的晶体管数量带来了更优秀的性能，作者认为以前程序的性能来自于芯片硬件。
+摩尔定律说集成电路上可以容纳的晶体管数量大约每18个月便会增加一倍。芯片上更多的晶体管数量带来了更优秀的性能，作者认为以前程序的性能来自于芯片硬件。
 你可以随心所欲的写你的软件，不用考虑性能，把性能留给了芯片硬件。更先进（晶体管数量更多）的芯片，更优秀的性能。
 
 但是有一点不得不考虑，那就是功耗。根据Intel的研究，功耗和性能有这样一个拟合关系`power = perf^1.74`。
@@ -70,11 +70,84 @@ mermaid: true
 
 
 # 4. The Boring Bits: Using an OpenMP Compiler(Hello World)
+```bash
+gcc -fopenmp foo.c
 
+export OMP_NUM_THREADS=4
+
+./a.out
+```
+## Exercise
+Verify that your OMP environment works, write a multithreaded program that prints "Hello World".
 
 # 5. Discussion1-Hello World and How Threads Work
 
+```c
+#include <stdio.h>
+#include <omp.h>
+
+int main()
+{
+  #pragma omp parallel
+  {
+    int ID = omp_get_thread_num();
+    printf("hello(%d)", ID);
+    printf(" world(%d) \n", ID);
+    return 0;
+  }
+}
+```
+`#pragma omp parallel` asks for the default num of threads.
+`omp_get_thread_num()` gets a unique identifier for each thread. range [0,N].
+
+## Shared Memory Computer
+Any computer composed of multiple processing elements that share an address space. There are two classes:
+### Symmetric Multiprocessor(SMP)
+A shared address space with "equal-time" access for each processor, and the OS treats every processor the same way.
+
+### Non Uniform Address Space Multiprocessor(NUMA)
+Different memory regions have different access costs...think of memory segmented into "Near" and "Far" momory.
+
+## OpenMP Overview
+- OpenMP is a multi-threading, shared address model.
+- Threads communicate by sharing variables.
+- Unintended sharing of data causes race conditions.
+- Race conditions: when the program's outcome changes as the threads are scheduled differently.
+- To control race conditioins, use synchronization to protect data conflicts.
+- Synchronization is expensive.
+
 # 6. Creating Threads(The Pi Program)
+
+## fork-join-parallellism
+
+![fork-join-parallellism](../img/openMP/introduction-to-openmp-intel/openmp-fork-join-parallellism.png?raw=true){: width="542" height="242"}
+
+上图中蓝色背景的部分就称为**并行域**， 里面是**a team of threads**.
+总体就是在某个时刻fork若干个线程, 在另外某个时刻join到一起。
+
+下面是一个简单的例子
+![openmp-execution-model-example](../img/openMP/introduction-to-openmp-intel/openmp-execution-model-example.png?raw=true){: width="542" height="242"}
+
+## Exercise
+把下面这个串行版本的计算`Pi`值的程序改成并行版本
+```c
+void calc_pi_serial()
+{
+    long num_steps = 0x20000000;
+    double sum = 0.0;
+    double step = 1.0 / (double)num_steps;
+
+    double start = omp_get_wtime( );    
+    for (long i = 0; i < num_steps; i++) {
+        double x = (i + 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    }    
+    double pi = sum * step;
+    
+    printf("pi: %.16g in %.16g secs\n", pi, omp_get_wtime() - start);
+    // will print "pi: 3.141592653589428 in 5.664520263002487 secs"
+}
+```
 
 # 7. Discussion2-The Simple Pi Program and Why the Performance is so Poor
 

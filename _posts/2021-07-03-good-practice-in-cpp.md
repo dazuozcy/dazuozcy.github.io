@@ -33,3 +33,4 @@ if (Anyone(s, "spring", "summer", "autumn", "winter")) {
 
 
 # Expression Template，奇异递归模板模式CRTP
+一个比较优秀的应用就是`Eigen`库。

@@ -25,6 +25,7 @@ C++支持4种程序设计风格（编程范式）：
 
 
 # **应用**
+[One of the revolutionary features of C++ over traditional languages is its support for exception handling.](https://www.codeproject.com/Articles/2126/How-a-C-compiler-implements-exception-handling)
 
 # **语义**
 C++对某些关键词的语义进行了扩展。如`struct`：在`C`中，`struct`仅仅表示一堆数据的聚合，没有`class-like features`: 没有方法，没有构造函数，没有基类。·C++·继承了`struct`关键字，然后扩展了语义。
