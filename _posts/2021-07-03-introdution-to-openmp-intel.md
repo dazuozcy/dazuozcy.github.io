@@ -77,7 +77,7 @@ export OMP_NUM_THREADS=4
 
 ./a.out
 ```
-## Exercise
+## Exercise 1
 Verify that your OMP environment works, write a multithreaded program that prints "Hello World".
 
 # 5. Discussion1-Hello World and How Threads Work
@@ -128,7 +128,7 @@ Different memory regions have different access costs...think of memory segmented
 下面是一个简单的例子
 ![openmp-execution-model-example](../img/openMP/introduction-to-openmp-intel/openmp-execution-model-example.png?raw=true){: width="542" height="242"}
 
-## Exercise
+## Exercise 2
 把下面这个串行版本的计算`Pi`值的程序改成并行版本
 ```c
 void calc_pi_serial()
@@ -150,12 +150,225 @@ void calc_pi_serial()
 ```
 
 # 7. Discussion2-The Simple Pi Program and Why the Performance is so Poor
+```c
+#define NUM_THREADS 2
+
+void calc_pi_omp_v1()
+{
+    long num_steps = 0x20000000;
+    double sum[NUM_THREADS] = { 0.0 };
+    double step = 1.0 / (double)num_steps;
+    int nthreads;
+    double start = omp_get_wtime( );    
+    
+    omp_set_num_threads(NUM_THREADS);
+    #pragma omp parallel
+    {
+        int id = omp_get_thread_num();
+        int nthrds = omp_get_num_threads();
+        if (id == 0) { // master thread
+            nthreads = nthrds;
+        }
+        for (long i = id; i < num_steps; i += nthrds) {
+            double x = (i + 0.5) * step;
+            sum[id] += 4.0 / (1.0 + x * x);
+        }  
+    }
+    double pi = 0;
+    for (int i = 0; i < nthreads; i++) {
+        pi += sum[i]*step;
+    }
+    
+    printf("pi: %.16g in %.16g secs\n", pi, omp_get_wtime() - start);
+}
+```
+上述并行版本可以得到正确的结果，但是当NUM_THREADS的值配置的更大的时候，耗时反而增加了。
+原因是**salse sharing**.
+
+## False Sharing
+If independent data elements happen to sit on the same cache line, each update will cause the cache lines to "slosh back and forth" between threads.
+
+![false sharing](../img/openMP/introduction-to-openmp-intel/openmp-false-sharing.png?raw=true){: width="542" height="242"}
+
+```c
+#define NUM_THREADS 4
+#define PAD 8 // assume 64 byte L1 cache line size
+void calc_pi_omp_v1()
+{
+    long num_steps = 0x20000000;
+    double sum[NUM_THREADS][PAD] = { 0.0 };
+    double step = 1.0 / (double)num_steps;
+    int nthreads;
+    double start = omp_get_wtime( );    
+    
+    omp_set_num_threads(NUM_THREADS);
+    #pragma omp parallel
+    {
+        int id = omp_get_thread_num();
+        int nthrds = omp_get_num_threads();
+        if (id == 0) {
+            nthreads = nthrds;
+        }
+        for (long i = id; i < num_steps; i += nthrds) {
+            double x = (i + 0.5) * step;
+            sum[id][0] += 4.0 / (1.0 + x * x);
+        }  
+    }
+    double pi = 0;
+    for (int i = 0; i < nthreads; i++) {
+        pi += sum[i][0]*step;
+    }
+    
+    printf("pi: %.16g in %.16g secs\n", pi, omp_get_wtime() - start);
+}
+```
+上述解决方案中通过增加[PAD]这一维，来保证sum[nthreads]中连续的元素存在于不同的cacheline上。
 
 # 8. Synchronization(Pi Program Revisited)
+## overview
+- OpenMP is multi-threading, shared address model.
+- Unintended sharing of data causes race conditions.
+- To control race conditions, use synchronization to protect data confilcts.
+- Change how data is accessed to minimize the need for synchronization.
+
+
+## synchronization
+### High level synchronization:
+- Critical(Mutual exclusion)
+- Atomic
+- Barrier
+- Ordered
+
+### Low level Synchronization:
+- Flush
+- Locks(both simple and nested)
+
+## The Barrier directive
+Threads wait until all the threads of the current Team have reached the barrier.
+
+All worksharing constructs contain an implict barrier at the end.
+
+```cpp
+#pragma omp parallel
+{
+  int id = omp_get_thread_num();
+  A[id] = big_cal1(id);
+
+#pragma omp barrier
+  B[id] = big_cal2(ia, A);
+}
+```
+
+## The Critical directive
+在某一时刻，只有1个线程会执行critical section，不会有多个线程同时执行.
+
+```cpp
+float res;
+
+#pragma omp parallel
+{
+  float B; int id, nthrds;
+  id = omp_get_thread_num();
+  nthrds = omp_get_num_threads();
+  for (int i = id, i < niters; i += nthrds) {
+    B = big_job(i);
+#pragma omp critical
+    res += consume(B);
+  }
+}
+```
+
+## The Atomic directive
+The statements inside the atomic must be one of the following forms:
+```
+x binop = expr
+   x++
+   ++x
+   x--
+   --x
+
+x is an lvalue of scalar type and binop is a non-overloaded built in operator.
+```
+```cpp
+#pragma omp parallel
+{
+    double tmp, B;
+    B = DOIT();
+    tmp = big_ugly(B);
+
+#pragma omp atomic
+    X += tmp;
+}
+```
+
+## Exercise 3
+修改Exercise 2中的代码，来解决由于sum数组引入的false sharing问题。
 
 # 9. Discussion3-Synchronization Overhead and Eliminating False Sharing
+在7的解决方案中通，过增加[PAD]这一维，来保证sum[nthreads]中连续的元素存在于不同的cache line上，从而消除了false sharing。但是cache line的size在不同机器上可能不一样，7的解决方案就不具有可移植性，并且不够优雅。
+
+```cpp
+void calc_pi_omp_v2()
+{
+    long num_steps = 0x20000000;
+    double step = 1.0 / (double)num_steps;
+    int nthreads;
+    double start = omp_get_wtime( );    
+    double pi = 0.0;
+    omp_set_num_threads(NUM_THREADS);
+    #pragma omp parallel
+    {
+        // sum需要是线程私有的，不能放在并行域外，否则结果不正确，切耗时更长
+        double sum;  
+        long i;
+        int id = omp_get_thread_num();
+        int nthrds = omp_get_num_threads();
+        if (id == 0) {
+            nthreads = nthrds;
+        }
+        for (i = id, sum = 0.0; i < num_steps; i += nthrds) {
+            double x = (i + 0.5) * step;
+            sum += 4.0 / (1.0 + x * x);
+        }  
+    #pragma omp critical
+        pi += sum * step;      
+    /*// 下面这3行的写法跟上面2行的效果类似
+      sum *= step;
+    #pragma omp atomic
+      pi += sum;  
+    */  
+    }
+    
+    printf("pi: %.16g in %.16g secs\n", pi, omp_get_wtime() - start);
+}
+```
+
 
 # 10. Parallel Loops(Making the Pi Program Simple) Part1
+## Worksharing
+- Loop Construct
+- Sections/Section Construct
+- Single Construct
+- Task Construct
+
+## Loop Worksharing Construct
+### The Schedule Clause
+The Schedule Clause affects how loop iterations are mapped onto threads.
+
+- schedule(static [, chunk]): Iteration space divided into blocks of chunk size, blocks are assigned to threads in a round-robin fasion. If chunk is not specified: #threads blocks.
+- schedule(dynamic [, chunk]): Iteration space divided into blocks of chunk(not specified: 1) size, blocks are scheduled to threads in the order in which threads finish previous blocks.
+- schedule(guided [, chunk]):Similar to dynamic, but block size starts with implementation-defined value, then is decreased exponentially down to chunk.
+- schedule(runtime): Schedule and chunk size taken from the OMP_SCHEDULE environment variable(or the runtime library)
+- schedule(auto) schedule is left up to the runtime to choose(does not have to be any of the above)
+
+#### When to use the schedule clause
+- static
+
+    Pre-determined and predictable by the programmer. Least work at runtime, Scheduling done at compile time.
+
+- dynamic
+
+    Unpredictable, highly variable work per iteration. Most work at runtime. Complex scheduling logic used at runtime.
 
 # 11. Parallel Loops(Making the Pi Program Simple) Part2
 
