@@ -11,19 +11,22 @@ mermaid: true
 
 这是一门非常优秀的OpenMP入门教程，讲解人也曾参与过OpenMP的开发。
 
-# 1. Introduction
-课程是`简洁的lectures + 简短的execise`的方式，讲究边学边练边掌握。
+# 1. 概述
+课程是`简洁的lectures` + `简短的execises`的方式，讲究边学边练边掌握。
 
 课程由五大模块组成，每个模块由一系列单元和讨论组成：
-- Getting Started with OpenMP
-- The Core Features of OpenMP
-- Working with OpenMP
-- Advanced OpenMP Topics
-- Recapitulation
+- `Getting Started with OpenMP`
+- `The Core Features of OpenMP`
+- `Working with OpenMP`
+- `Advanced OpenMP Topics`
+- `Recapitulation`
 
-总共27个lectures.
+总共`27`个lecture。
 
-# 2. Introduction to Parallel Programing Part1
+
+
+# 2. 并行编程介绍-1
+
 摩尔定律说集成电路上可以容纳的晶体管数量大约每18个月便会增加一倍。芯片上更多的晶体管数量带来了更优秀的性能，作者认为以前程序的性能来自于芯片硬件。
 你可以随心所欲的写你的软件，不用考虑性能，把性能留给了芯片硬件。更先进（晶体管数量更多）的芯片，更优秀的性能。
 
@@ -39,9 +42,10 @@ mermaid: true
 对比可以看出多核架构使我们能够以更低的频率完成相同的工作，同时节省大量的功耗。
 
 
-# 3. Introduction to Parallel Programing Part2
 
-## 并发与并行
+# 3. 并行编程介绍-2
+
+## 并发 vs. 并行
 
 | Concurrency             | Parallelism                  |
 |---------------------|:---------------------------------:|
@@ -69,7 +73,9 @@ mermaid: true
 - "Structured Block": A block of one or more statements with one point of entry at the top and one point of exit at the bottom.
 
 
-# 4. The Boring Bits: Using an OpenMP Compiler(Hello World)
+
+# 4. 使用OpenMP编译(Hello World)
+
 ```bash
 gcc -fopenmp foo.c
 
@@ -80,7 +86,9 @@ export OMP_NUM_THREADS=4
 ## Exercise 1
 Verify that your OMP environment works, write a multithreaded program that prints "Hello World".
 
-# 5. Discussion1-Hello World and How Threads Work
+
+
+# 5. 讨论1-Hello World和线程如何工作的
 
 ```c
 #include <stdio.h>
@@ -100,15 +108,15 @@ int main()
 `#pragma omp parallel` asks for the default num of threads.
 `omp_get_thread_num()` gets a unique identifier for each thread. range [0,N].
 
-## Shared Memory Computer
+## 共享内存计算机
 Any computer composed of multiple processing elements that share an address space. There are two classes:
-### Symmetric Multiprocessor(SMP)
+### 对称多处理器(SMP)
 A shared address space with "equal-time" access for each processor, and the OS treats every processor the same way.
 
-### Non Uniform Address Space Multiprocessor(NUMA)
+### 非统一地址空间多处理器(NUMA)
 Different memory regions have different access costs...think of memory segmented into "Near" and "Far" momory.
 
-## OpenMP Overview
+## OpenMP概览
 - OpenMP is a multi-threading, shared address model.
 - Threads communicate by sharing variables.
 - Unintended sharing of data causes race conditions.
@@ -116,9 +124,11 @@ Different memory regions have different access costs...think of memory segmented
 - To control race conditioins, use synchronization to protect data conflicts.
 - Synchronization is expensive.
 
-# 6. Creating Threads(The Pi Program)
 
-## fork-join-parallellism
+
+# 6. 创建线程(`Pi`程序)
+
+## fork-join并行
 
 ![fork-join-parallellism](../img/openMP/introduction-to-openmp-intel/openmp-fork-join-parallellism.png?raw=true){: width="542" height="242"}
 
@@ -149,7 +159,10 @@ void calc_pi_serial()
 }
 ```
 
-# 7. Discussion2-The Simple Pi Program and Why the Performance is so Poor
+
+
+# 7. 讨论 2-简单的`Pi`程序及为什么性能如此差
+
 ```c
 #define NUM_THREADS 2
 
@@ -224,42 +237,28 @@ void calc_pi_omp_v1()
 ```
 上述解决方案中通过增加[PAD]这一维，来保证sum[nthreads]中连续的元素存在于不同的cacheline上。
 
-# 8. Synchronization(Pi Program Revisited)
-## overview
+
+
+# 8. 同步(再看`Pi`程序)
+
 - OpenMP is multi-threading, shared address model.
 - Unintended sharing of data causes race conditions.
 - To control race conditions, use synchronization to protect data confilcts.
 - Change how data is accessed to minimize the need for synchronization.
 
 
-## synchronization
-### High level synchronization:
+## 同步
+### 高层同步:
 - Critical(Mutual exclusion)
 - Atomic
 - Barrier
 - Ordered
 
-### Low level Synchronization:
+### 底层同步:
 - Flush
 - Locks(both simple and nested)
 
-## The Barrier directive
-Threads wait until all the threads of the current Team have reached the barrier.
-
-All worksharing constructs contain an implict barrier at the end.
-
-```cpp
-#pragma omp parallel
-{
-  int id = omp_get_thread_num();
-  A[id] = big_cal1(id);
-
-#pragma omp barrier
-  B[id] = big_cal2(ia, A);
-}
-```
-
-## The Critical directive
+## `critical` 原语
 在某一时刻，只有1个线程会执行critical section，不会有多个线程同时执行.
 
 ```cpp
@@ -278,7 +277,7 @@ float res;
 }
 ```
 
-## The Atomic directive
+## `atomic`原语
 The statements inside the atomic must be one of the following forms:
 ```
 x binop = expr
@@ -304,7 +303,10 @@ x is an lvalue of scalar type and binop is a non-overloaded built in operator.
 ## Exercise 3
 修改Exercise 2中的代码，来解决由于sum数组引入的false sharing问题。
 
-# 9. Discussion3-Synchronization Overhead and Eliminating False Sharing
+
+
+# 9. 讨论3-同步的开销和消除False Sharing
+
 在7的解决方案中通，过增加[PAD]这一维，来保证sum[nthreads]中连续的元素存在于不同的cache line上，从而消除了false sharing。但是cache line的size在不同机器上可能不一样，7的解决方案就不具有可移植性，并且不够优雅。
 
 ```cpp
@@ -344,7 +346,9 @@ void calc_pi_omp_v2()
 ```
 
 
-# 10. Parallel Loops(Making the Pi Program Simple) Part1
+
+# 10. 并行化循环(让`Pi`程序简单)-1
+
 ## Worksharing
 - Loop Construct
 - Sections/Section Construct
@@ -370,36 +374,529 @@ The Schedule Clause affects how loop iterations are mapped onto threads.
 
     Unpredictable, highly variable work per iteration. Most work at runtime. Complex scheduling logic used at runtime.
 
-# 11. Parallel Loops(Making the Pi Program Simple) Part2
 
-# 12. Discussion4-Pi Program Wrap-Up
 
-# 13. Barriers...and then More Workshare Constructs
+# 11. 并行化循环(让`Pi`程序简单)-2
 
-# 14. Locks in OpenMP
+- 找到compute-intensive的for循环
+- 让每个迭代独立以保证循环可以以任何顺序正确的执行
 
-# 15. OpenMP Runtime Library Routines
+比如下面这段代码片段，`A[i]`的值依赖于`j`的值，`j`的值又依赖于上一次`j`的值。这样就导致循环无法并行起来。
 
-# 16. Environment Variablesin OpenMP
+```cpp
+int i, j, A[MAX];
+j = 5;
+for (i = 0; i < MAX; i++) {
+    j += 2;
+    A[i] = big(j);
+}
+```
 
-# 17. Data Environment
+将`j`的计算改造一下，就可以使得当前迭代不再依赖于上一次迭代，就可以并行起来。如下所示：
 
-# 18. Discussion5-Debugging OpenMP Programs
+```cpp
+int i, j, A[MAX];
+#pragma omp parallel for
+for (i = 0; i < MAX; i++) {
+    int j = 5 + 2 * (i + 1);
+    A[i] = big(j);
+}
+```
 
-# 19. Skill Practice: Linked Lists and OpenMP
+## `reduction`原语
 
-# 20. Discussion6-Different Ways to Traverse Linked Lists
+In a reduction-operation the operator is applied to all variables in the list. The variables have to be shared.
+- `reduction(operator:list)`
+- The result is provided in the associated reduction variable.
+
+- A local copy of each list variable is made and initialized depending on the "op".
+
+- Updates occur on the local copy.
+
+- local copies are reduced into a single value and combined with the original global value.
+
+- Possible reduction operators with initialization value:
+`+ (0), * (1), - (0), & (~0), ^ (0), | (0), && (1), || (0), min (largest number), max (least number)`
+
+![reduction](../img/openMP/reduction.png){: width="1086" height="542"}
+
+
+
+# 12. 讨论4-`Pi`程序总结
+
+```cpp
+void calc_pi_reduction()
+{
+    static long num_steps = 0x20000000;
+    double step;
+    double sum = 0.0;
+    step = 1.0 / (double)num_steps;
+
+    double start = omp_get_wtime( );    
+#pragma omp parallel
+#pragma omp for reduction(+:sum)
+    for (long i = 0; i < num_steps; i++) {
+        double x = (i + 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    }    
+    double pi = sum * step;
+
+    double end = omp_get_wtime( );
+    
+    printf("pi: %.16g in %.16g secs\n", pi, end - start);
+}
+```
+
+
+
+# 13. Barriers...和更多Constructs
+
+## `barrier`原语
+
+Threads wait until all the threads of the current Team have reached the barrier.
+
+All worksharing constructs contain an implict barrier at the end.
+
+```cpp
+#pragma omp parallel
+{
+  int id = omp_get_thread_num();
+  A[id] = big_cal1(id);
+#pragma omp barrier
+  B[id] = big_cal2(ia, A);
+}
+```
+
+
+
+# 14. OpenMP中的锁
+
+### Lock Routines
+
+- `omp_init_lock()`
+- `omp_set_lock()`
+- `omp_uset_lock()`
+- `omp_destroy_lock()`
+- `omp_test_lock()`
+
+```cpp
+#pragma omp parallel for
+for(i=0; i < NBUCKETS;i++) {
+    omp_init_lock(&hist_locks[i]);
+    hist[i] = 0;
+}
+
+#pragma omp parallel for
+for(i = 0; i < NVALS; i++) {
+    ival = sample(arr[i]);
+    omp_set_lock(&hist_locks[ival]);
+      hist[ival]++;
+    omp_unset_lock(&hist_locks[ival]);
+}
+
+#pragma omp parallel for
+for(i=0; i < NBUCKETS;i++) {
+    omp_destroy_lock(&hist_locks[i]);
+}
+```
+
+# 15. OpenMP的运行时库方法
+
+Runtime Library Routines
+
+- `omp_set_num_threads()`
+- `omp_get_num_threads()`，在并行域外调用这个接口，返回值是1
+- `omp_get_thread_num()`
+- `omp_get_max_threads()`
+- `omp_in_parallel()`
+- `omp_set_dynamic()`
+- `omp_get_dynamic()`
+- `omp_num_procs()`
+
+# 16. OpenMP的环境变量
+
+- `OMP_NUM_THREADS`
+- `OMP_STACKSIZE`
+- `OMP_WAIT_POLICY`，(ACTIVE or PASSIVE)
+- `OMP_PROC_BIND`，（TRUE or FALSE）
+
+
+
+# 17. 数据作用域
+
+由于OpenMP是基于共享内存的编程模型，所以大部分变量的属性默认是shared，比如static变量、文件作用域的变量。但是并不是一切都是shared，并行域里调用的函数的栈变量是private，语句块里的自动变量是private。基本原则是：Heap is shared, stack is private.
+
+```cpp
+double A[10];
+int main() {
+    int index[10];
+    #pragma omp parallel
+      work(index);
+    printf("%d\n", index[0]);    
+}
+
+extern double A[10];
+void work(int* index) {
+    double temp[10];
+    static int count;
+    ...
+}
+/*
+  A, index, count 是shared
+  temp是private
+*/
+```
+
+## Changing Storage Attributes
+
+- shared
+- private
+    ```cpp
+    void wrong() {
+        int tmp = 0;
+    #pragma omp parallel for private(tmp) //tmp的私有副本是未初始化的
+        for(int j = 0; j < 1000; j++) {
+            tmp += j;
+        }
+        printf("%d\n", tmp); // 会打印全局tmp的值0
+    }
+    ```
+- firstprivate
+    ```cpp
+    int incr = 0;
+    // incr的私有副本会用全局incr的值0作为初始值，for循环结束后，私有副本会消失
+    #pragma omp parallel for firstprivate(incr) 
+    for(i=0; i <=MAX; i++) {
+        if ((i % 2) == 0) incr++;
+        A[i]=incr;
+    }
+    ```
+- lastprivate
+    ```cpp
+    void sq2(int n, double *lastterm)
+    {
+        double x; int i;
+        // 最后一次循环（i=N-1）得到的x的值会传给全局x，进而赋给lastterm指针指向的对象
+        #pragma omp parallel for lastprivate(x) 
+        for(i = 0; i < N; i++) {
+            x = a[i]*a[i] + b[i]*b[i];
+            b[i] = sqrt(x);
+        }
+    
+        *lastterm = x;
+    }
+    ```
+- default(private/shared/none)
+
+### Scoping in OpenMP: Dividing variables in shared and private:
+- private-list and shared-list on Parallel Region.
+- private-list and shared-list on Worksharing constructs.
+- General default is shared for Parallel Region, firstprivate for Task.
+- Loop control variables on for-constructs are private.
+- Non-static variables local to Parallel Regions are private.
+- private: A new uninitialuized instance is created for the task or each thread executing the construct.
+    - firstprivate: Initialization with the value before encountering the construct
+    - lastprivate: Value of last loop iteration is written back to Master
+- Static variables are shared.
+
+### Privatization of Global/Static Variables
+#### Global/Static variables can be privatized with the `threadprivate` directive
+- One instance is created for each thread
+    - before the first parallel region is encountered.
+    - instance exists until the program ends
+    - does not work (well) with nested parallel region.
+- Based on thread-local storage(TLS)
+```cpp
+static i;
+#pragma omp threadprivate(i)
+```
+**NOTE: Try to avoid the use of threadprivate ans static variables**
+
+
+
+# 18. 讨论5-调试OpenMP程序
+
+下面是错误版本。
+
+```cpp
+#include "omp.h"
+#include <cstdio>
+
+#define NPOINTS 1000
+#define MXITR 1000
+struct d_complex {
+    double r;
+    double i;
+};
+
+struct d_complex c;
+int numoutside = 0;
+
+void testpoint()
+{
+    struct d_complex z;
+    int iter;
+    double temp;
+    
+    z = c;
+    for(iter=0; iter<MXITR; iter++) {
+        temp = (z.r*z.r)-(z.i*z.i)+c.r;
+        z.i=z.r*z.i*2+c.i;
+        z.r=temp;
+        if((z.r*z.r+z.i*z.i) > 4.0) {
+            numoutside++;
+            break;
+        }
+    }
+}
+
+void MandelBrotArea()
+{    
+    int i, j;
+    double area, error, eps = 1.0e-5;
+#pragma omp parallel for default(shared) private(c, eps)
+    for (i = 0; i < NPOINTS; i++) {
+        for (j = 0; j < NPOINTS; j++) {
+            c.r = -2.0 + 2.5*(double)(i) / (double)NPOINTS + eps;
+            c.i = 1.125*(double)(j) / (double)NPOINTS + eps;
+            testpoint();
+        }
+    }
+    
+    area = 2.0*2.5*1.125 * (double)(NPOINTS*NPOINTS-numoutside) / (double)(NPOINTS*NPOINTS);
+    error=area/(double)NPOINTS;
+    printf("error: %d\n", error);
+}
+
+int main(void) {
+    MandelBrotArea();
+    return 0;
+}
+```
+
+将default设置为none，可以用来调试。
+
+```diff
+- #pragma omp parallel for default(shared) private(c, eps)
++ #pragma omp parallel for default(none) private(c, eps)
+```
+
+再进行编译的时候就会error信息：
+
+```shell
+mandelbrot_wrong.cc: In function ‘void MandelBrotArea()’:
+mandelbrot_wrong.cc:38:16: error: ‘j’ not specified in enclosing ‘parallel’
+         for (j = 0; j < NPOINTS; j++) {
+              ~~^~~
+mandelbrot_wrong.cc:36:9: error: enclosing ‘parallel’
+ #pragma omp parallel for default(none) private(c, eps)
+         ^~~
+```
+
+下面是正确的版本。
+
+```cpp
+#define NPOINTS 1000
+#define MXITR 1000
+struct d_complex {
+    double r;
+    double i;
+};
+
+struct d_complex c;
+int numoutside = 0;
+
+void testpoint(struct d_complex c)
+{
+    struct d_complex z;
+    int iter;
+    double temp;
+    
+    z = c;
+    for(iter=0; iter<MXITR; iter++) {
+        temp = (z.r*z.r)-(z.i*z.i)+c.r;
+        z.i=z.r*z.i*2+c.i;
+        z.r=temp;
+        if((z.r*z.r+z.i*z.i) > 4.0) {
+        #pragma omp atomic
+            numoutside++;
+            break;
+        }
+    }
+}
+
+void MandelBrotArea()
+{    
+    int i, j;
+    double area, error, eps = 1.0e-5;
+#pragma omp parallel for default(shared) private(c, j) firstprivate(eps)
+    for (i = 0; i < NPOINTS; i++) {
+        for (j = 0; j < NPOINTS; j++) {
+            c.r = -2.0 + 2.5*(double)(i) / (double)NPOINTS + eps;
+            c.i = 1.125*(double)(j) / (double)NPOINTS + eps;
+            testpoint(c);
+        }
+    }
+    
+    area = 2.0*2.5*1.125 * (double)(NPOINTS*NPOINTS-numoutside) / (double)(NPOINTS*NPOINTS);
+    error=area/(double)NPOINTS;
+    printf("error: %d\n", error);
+}
+```
+
+
+
+下面是两个版本之间的差异
+
+```diff
+diff --git a/mandelbrot_wrong.cc b/mandelbrot.cc
+index 833155f..e6aadd1 100644
+--- a/mandelbrot_wrong.cc
++++ b/mandelbrot.cc
+@@ -11,7 +11,7 @@ struct d_complex {
+ struct d_complex c;
+ int numoutside = 0;
+ 
+-void testpoint()
++void testpoint(struct d_complex c)
+ {
+     struct d_complex z;
+     int iter;
+@@ -23,6 +23,7 @@ void testpoint()
+         z.i=z.r*z.i*2+c.i;
+         z.r=temp;
+         if((z.r*z.r+z.i*z.i) > 4.0) {
++        #pragma omp atomic
+             numoutside++;
+             break;
+         }
+@@ -33,12 +34,12 @@ void MandelBrotArea()
+ {    
+     int i, j;
+     double area, error, eps = 1.0e-5;
+-#pragma omp parallel for default(shared) private(c, eps)
++#pragma omp parallel for default(shared) private(c, j) firstprivate(eps)
+     for (i = 0; i < NPOINTS; i++) {
+         for (j = 0; j < NPOINTS; j++) {
+             c.r = -2.0 + 2.5*(double)(i) / (double)NPOINTS + eps;
+             c.i = 1.125*(double)(j) / (double)NPOINTS + eps;
+-            testpoint();
++            testpoint(c);
+         }
+     }
+```
+
+
+
+改动最少的计算`pi`的版本:
+
+```cpp
+void calc_pi_reduction()
+{
+    static long num_steps = 0x20000000;
+    double step;
+    double sum = 0.0;
+    step = 1.0 / (double)num_steps;
+
+    double start = omp_get_wtime( );    
+#pragma omp parallel
+#pragma omp for reduction(+:sum)
+    for (long i = 0; i < num_steps; i++) {
+        double x = (i + 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    }    
+    double pi = sum * step;
+
+    double end = omp_get_wtime( );
+    printf("pi: %.16g in %.16g secs\n", pi, end - start);
+}
+```
+
+
+
+# 19. 技能训练:链表和OpenMP
+
+到目前为止，介绍了
+
+- To create a team of threads: `#pragma omp parallel`
+- To share work between threads
+  - `#pragma omp for`
+  - `#pragma omp single`
+- To prevent conflicts(data races)
+  - `#pragma omp critical`
+  - `#pragma omp atomic`
+  - `#pragma omp barrier`
+  - `#pragma omp master`
+- Data environment clauses
+  - `private(variable_list)`
+  - `firstprivate(variable_list)`
+  - `lastprivate(variable_list)`
+  - `reduction(op:variable_list)`
+
+
+
+考虑如何将下面的链表遍历代码并行化，
+
+```cpp
+p = head;
+while(p) {
+    process(p);
+    p = p->next;
+}
+```
+
+
+
+# 20. 讨论6-遍历链表的不同方法
+
+Ugly solution
+
+```cpp
+while(p) {
+    p = p->next;
+    count++;
+}
+p = head;
+for (int i = 0; i < count; i++) {
+    parr[i] = p;
+    p = p->next;
+}
+
+#pragma omp parallel
+{
+    #pragma omp for schedule(static, 1)
+    for (int i = 0; i < count; i++) {
+        process(parr[i]);
+    }
+}
+```
+
+
 
 # 21. Tasks(Linked List the Easy Way)
 
-# 22. Discussion7-Understanding Tasks
 
-# 23. The Scary Stuff: Memory Model, Atomics, and Flush(Pairwise Synch)
 
-# 24. Discussion8-The Pitfalls of Pairwise Synchronization
 
-# 25. Threadprivate Data and How to Support libraries(Pi Again)
 
-# 26. Discussion9-Random Number Generators
+# 22. 讨论7-理解Tasks
 
-# 27. Recapitulation
+
+
+# 23. 可怕的东西:内存模型,Atomics,Flush(Pairwise同步)
+
+
+
+# 24. 讨论8-Pairwise同步的陷阱
+
+
+
+# 25. 线程私有数据和如何支持库(`Pi` again)
+
+
+
+# 26. 讨论 9-随机数生成器
+
+
+
+# 27. 概括
