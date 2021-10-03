@@ -27,8 +27,7 @@ mermaid: true
 
 # 2. 并行编程介绍-1
 
-摩尔定律说集成电路上可以容纳的晶体管数量大约每18个月便会增加一倍。芯片上更多的晶体管数量带来了更优秀的性能，作者认为以前程序的性能来自于芯片硬件。
-你可以随心所欲的写你的软件，不用考虑性能，把性能留给了芯片硬件。更先进（晶体管数量更多）的芯片，更优秀的性能。
+摩尔定律说集成电路上可容纳的晶体管数量大约每18个月便会增加一倍。芯片上更多的晶体管数量带来了更优秀的性能，作者认为以前程序的性能来自于芯片硬件。你可以随心所欲的写你的软件，不用考虑性能，把性能留给了芯片硬件。更先进(晶体管数量更多)的芯片，更优秀的性能。
 
 但是有一点不得不考虑，那就是功耗。根据Intel的研究，功耗和性能有这样一个拟合关系`power = perf^1.74`。
 
@@ -875,15 +874,212 @@ for (int i = 0; i < count; i++) {
 
 # 21. Tasks(Linked List the Easy Way)
 
+Tasks are independent units of work.
 
+```cpp
+#pragma omp task [clause[[,] clause]...]
+{structured-block}
+```
+
+Tasks are composed of:
+
+- code to execute
+- data environment
+- internal control variables(ICV)
+
+The runtime system decides when tasks are executed.
+
+例子：
+
+```cpp
+#pragma omp parallel
+{
+    #pragma omp task //每个线程创建一个任务foo()
+    foo();
+    #pragma omp barrier
+    #pragma omp single // 只有一个线程创建任务bar()
+    {
+        #pragma omp task
+        bar();
+    }
+}
+```
+
+
+
+![Task clause](../img/openMP/task-clause.png?raw=true){: width="1086" height="542"}
+
+## `taskwait` directive
+- It's a stand-alone directive
+    ```cpp
+    #pragma omp taskwait
+    ```
+- wait in the completion of child tasks of the current task; just direct children, not all descendant tasks; includes an implicit task scheduling point(TSP)
+
+![taskwait](../img/openMP/taskwait.png?raw=true){: width="1086" height="542"}
+
+## `if` clause
+### The `if` clause of a task construct
+- allows to optimize task creation/execution
+- reduces parallelism but also reduces the pressure in the runtime's task pool.
+- for "very" fine grain tasks you may need to do your own `if`
+    ```cpp
+    #pragma omp task if (expression)
+    ```
+- If the expression of the `if` clause evaluates to false
+    - the encountering task is suspended
+    - the new task is executed immediately
+    - the parent task resumes when the task finishes
+
+- This is known as undeferred task
+![task-if-clause](../img/openMP/task-if-clause.png?raw=true){: width="1086" height="542"}
+
+![task-if-clause2](../img/openMP/task-if-clause2.png?raw=true){: width="1086" height="542"}
+
+## Tasking Overheads
+### Typical overheads in task-based programs are:
+- Task Creation: populate task data structure, add task to task queue
+- Task execution: retrieve a task from the queue(may including work stealing)
+
+### If tasks become too fine-grained, overhead becomes noticeable
+- Execution spends a higher relative amount of time in the runtime
+- Task execution contributing to runtime becomes significantly smaller
+
+### A rough rule of thumb to avoid(visiable) tasking overhead
+- OpenMP tasks: 80-100k instructions executed per task
+- TBB tasks: 30-50k instructions executed per task
+- Other programming models may have another ideal granularity
+
+## Tasks vs Threads
+### Threads do not compose well
+- Example: multi-threaded plugin in a multi-threaded application
+- Composition usually leads to oversubscription and load imbalance
+
+### Task models are inherently composable
+- A pool of threads executes all created tasks
+- Tasks from different modules can freely mix
+
+### Task models make complex algorithms easier to parallelize
+- Programmers can think in concurrent pieces of work
+- Mapping of concurrent execution to threads handled elsewhere
+- Task creation can bu irregular(e.g., recursion, graph traversal)
+
+## Sometimes you are better off with threads
+### Some scenarios are more amenable for traditional threads
+- Granularity too coarse for tasking
+- Isolation of autonomous agents
+
+### Static allocation of parallel work is typically easier with threads
+- Controlling allocation of work to cache hierarchly
+
+### Graphical User Interface(event thread + worker threads)
+
+### Request/response processing, e.g.,
+- Web Server
+- Database servers
+
+# Tasking and Scoping
+## Data scoping in tasks
+### Some rules from Parallel Regions apply
+- Automatic Storage(local) variables are private
+- Static and global variables are shared
+
+### Tasking: variables are firstprivate unless shared in the enclosing context
+- Only shared attribute is inherited
+- Exception: Orphaned Task variables are firstprivate by default
+
+### Example
+```cpp
+int a = 1;
+void foo() {
+    int b = 2, c = 3;
+    #pragma omp parallel private(b)
+    {
+        int d = 4;
+        #pragma omp task
+        {
+            int e = 5;
+
+            // scope of a: shared,         value of a: 1
+            // scope of b: firstprivate,   value of b: 0 or undefined
+            // scope of c: shared,         value of c: 3
+            // scope of d: firstprivate,   value of d: 4
+            // scope of e: private,        value of e: 5
+        }
+    }
+}
+```
+
+![private-lifetime](../img/openMP/private-lifetime.png?raw=true){: width="1086" height="542"}
+
+### Orphaned  Task Variables
+- Arguments passed by reference are `firstprivate` by default in orphaned task generating constructs, example:
+![private-lifetime](../img/openMP/orphaned-task-variables.png?raw=true){: width="1086" height="542"}
 
 
 
 # 22. 讨论7-理解Tasks
 
+用task实现遍历链表
+
+```cpp
+#pragma omp parallel
+{
+    #pragma omp single
+    {
+        node* p = head;
+        while (p) {
+        #pragma omp task firstprivate(p);
+            process(p);
+        p = p->next;
+        }
+    }
+}
+```
+
+![reduction](../img/openMP/execution-of-tasks.png){: width="1086" height="542"}
+
 
 
 # 23. 可怕的东西:内存模型,Atomics,Flush(Pairwise同步)
+
+![reduction](../img/openMP/introduction-to-openmp-intel/openmp-memory-model.png){: width="1086" height="542"}
+
+**sequential consistency**
+
+在一个多核处理器中，操作(R/W/S)是sequential consistency的，如果：
+
+- 对于每个核，它们保持这代码中的顺序
+- 其他每个处理器看到它们的总体顺序是相同的
+
+OpenMP defines consistency as a variant of weak consistency.
+
+Can not reorder `S` ops with `R` or `W` ops on the same thread.
+
+Weak consistency guarantees `S>>W`, `S>>R`, `R>>S`, `W>>S`, `S>>S`
+
+
+
+### Flush
+
+Defines a sequence point at which a thread is guaranteed to see a consistent view of memory with respect to the `flush set`.
+
+The flush set is:
+
+- A list of variables when the  `flush(list)` construct is used
+- `All thread visiable variables` for a flush construct without an argument list
+
+The action of flush is to guarantee that:
+
+- All R/W ops that overlap the flush set and occur prior to the flush complete before the flush executes.
+- All R/W ops that overlap the flush set and occur after the flush don't execute until after the flush executes.
+- Flushes with overlapping flush sets can not be reordered.
+
+A flush operation is implied by OpenMP synchronizations, e.g.
+
+- At entry/exit of parallel regions
+- At implicit and explicit barriers
+- At entry/exit of critical regions
 
 
 
