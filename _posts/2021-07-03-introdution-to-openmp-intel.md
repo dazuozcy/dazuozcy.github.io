@@ -1085,6 +1085,128 @@ A flush operation is implied by OpenMP synchronizations, e.g.
 
 # 24. 讨论8-Pairwise同步的陷阱
 
+### Pair Wise Synchronization in OpenMP
+
+OpenMP lacks synchronization constructs that work between pairs of threads. When this is needed, you have to build it yourself.
+
+Pair Wise Synchronization:
+
+- use a shared flag variable
+- reader spins waiting for the new flag value
+- use flushed to force updates to and form memory
+
+一个例子，生产者-消费者模型的例子。
+
+```cpp
+int main()
+{
+  double* A, sum, runtime;
+  int flag = 0;
+  A = (double*)malloc(N * sizeof(double));
+
+  fill_rand(N, A);        // producer: fill an array of data
+
+  sum = Sum_arrat(N, A);  // consumer: sum the array
+  
+  return 0;
+}
+```
+
+将上述例子用OpenMP并行化，如下所示，这个改法有个极低概率的bug，就是`flag = 1;`的操作不算原子的。
+
+```cpp
+int main()
+{
+  double* A, sum, runtime;
+  int flag = 0;
+  A = (double*)malloc(N * sizeof(double));
+
+  #pragma omp prallel sections
+  {
+    #pragma omp section
+    {
+      fill_rand(N, A);        // producer: fill an array of data
+      #pragma omp flush
+      flag = 1;
+      #pragma omp flush (flag)
+    }
+
+    #pragma omp section
+    {
+      #pragma omp flush (flag)
+      while (flag == 0) {
+        #pragma omp flush (flag)
+      }
+      
+      #pragma omp flush
+      sum = Sum_arrat(N, A);  // consumer: sum the array
+    }
+  }
+  
+  return 0;
+}
+```
+
+### atomic
+
+Atomic is expanded to cover the full range of common scenarios where you need to protect a memory operation so it occurs atomically.
+
+```cpp
+#pragma omp atomic [read | write | update | capture]
+```
+
+- atomic can protect loads
+
+  ```cpp
+  #pragma omp atomic read
+  	v = x;
+  ```
+
+- atomic can protect stores
+
+  ```cpp
+  #pragma omp atomic write
+  	x = expr;
+  ```
+
+用`atomic`解决非原子操作问题。代码如下所示。
+
+```cpp
+int main()
+{
+  double* A, sum, runtime;
+  int flag = 0, flag_tmp;
+  A = (double*)malloc(N * sizeof(double));
+
+  #pragma omp prallel sections
+  {
+    #pragma omp section
+    {
+      fill_rand(N, A);        // producer: fill an array of data
+      #pragma omp flush
+      #pragma omp atomic write
+      flag = 1;
+      #pragma omp flush (flag)
+    }
+
+    #pragma omp section
+    {
+      while(1) {
+      #pragma omp flush (flag)
+      #pragma atomic write
+      flg_temp = flag;
+      if (flag_tmp == 1) break;
+      }
+      
+      #pragma omp flush
+      sum = Sum_arrat(N, A);  // consumer: sum the array
+    }
+  }
+  
+  return 0;
+}
+```
+
 
 
 # 25. 线程私有数据和如何支持库(`Pi` again)
