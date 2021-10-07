@@ -1211,10 +1211,224 @@ int main()
 
 # 25. 线程私有数据和如何支持库(`Pi` again)
 
+`threadprivate`: makes global data private to a thread.
+
+```cpp
+int counter = 0;
+#pragma omp threadprivate(counter) //每个线程都有一个counter变量，并且被初始化为0
+
+int increment_counter()
+{
+    counter++;
+    return (counter);
+}
+```
+
 
 
 # 26. 讨论 9-随机数生成器
 
+蒙特卡洛法计算`pi`值
+
+```cpp
+#include <random>
+
+static long num_trails = 10000;
+
+void calc_pi_montacalo()
+{
+    long i;
+    long Ncircle = 0;
+    double pi, x, y;
+    double r = 1.0;
+
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_real_distribution<> dist(-1.0, 1.0);
+    
+    #pragma omp parallel for private(x, y) reduction(+:Ncircle)
+    for(i = 0; i < num_trails; i++) {
+        x = dist(rng);
+        y = dist(rng);
+        if ((x * x + y * y) <= r * r) {
+            Ncircle++;
+        }
+    }
+
+    pi = 4.0 * ((double)Ncircle / (double)num_trails);
+    printf("\n%d trails, pi is %f\n", num_trails, pi);
+}
+```
+
+
+
+### 线性同余法
+
+Linear Congruential Generator(LCG): easy to write, cheap to compute, portable, OK quality.
+
+```cpp
+random_next = (MULTIPLIER* random_last + ADDEND) % PMOD;
+random_last = random_next;
+```
+
+If you pick the multiplier and addend correctly, LCG has a period of PMOD.
+
+```cpp
+/* simple single thread version */
+static long MULTIPLIER = 1366;
+static long ADDEND = 150889;
+static long PMOD = 714025;
+long random_last = 0;
+
+double random()
+{
+    long random_next;
+    random_next = (MULTIPLIER* random_last + ADDEND) % PMOD;
+    random_last = random_next;
+
+    return ((double)random_next / (double)PMOD);
+}
+```
+
 
 
 # 27. 概括
+
+新手并行程序员与专家并行程序员之间的区别是专家have a collection of these fundamental **design patterns** in their minds.
+
+### SPMD
+
+Single Program Multiple Data: Run the same program on P processing elements where P can be arbitrarily large.
+
+Use the rank - an ID ranging from 0 to (P-1) - to select between a set of tasks and to manage any shared data structures.
+
+例子：
+
+```cpp
+#include "omp.h"
+
+void main()
+{
+    int i, step;
+    double pi = 0.0, sum = 0.0;
+    step = 1.0 / (double)num_steps;
+    
+    #pragma omp parallel firstprivate(sum) private(x, i)
+    {
+        int id = omp_get_threads_num();
+        int numprocs = omp_get_num_threads();
+        int step1 = id * num_steps / numprocs;
+        int stepN = (id+1) * num_steps / numprocs;
+        if (id == numprocs - 1) {
+            stepN = num_steps;
+        }
+        for (ri = step1; i < stepN; i++) {
+            x = (i+0.5)*step;
+            sum += 4.0/(1.0+x*x);
+        }
+        #pragma omp critical
+        	pi += sum*step;
+    }
+}
+```
+
+### Loop Parallelism
+
+Collections of tasks are defined as iterations of one or more loops.
+
+Loop iterations are divided between a collection of processing elements to compute tasks in parallel.
+
+例子：
+
+```cpp
+void calc_pi_reduction()
+{
+    static long num_steps = 0x20000000;
+    double step;
+    double sum = 0.0;
+    step = 1.0 / (double)num_steps;
+
+    double start = omp_get_wtime( );    
+#pragma omp parallel
+#pragma omp for reduction(+:sum)
+    for (long i = 0; i < num_steps; i++) {
+        double x = (i + 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    }    
+    double pi = sum * step;
+
+    double end = omp_get_wtime( );
+    
+    printf("pi: %.16g in %.16g secs\n", pi, end - start);
+}
+```
+
+### Divide and Conquer Pattern
+
+- Use when a problem includes a method to divide into subproblems and a way to recombine solutions of subproblems into a global solution.
+
+- Define a split operation.
+
+- Continue to split the problem until subproblems are small enough to solve directly.
+
+- Reconbine solutions to subproblems to solve original global problem.
+
+![image](../img/openMP/divide-and-conquer.png){: width="1086" height="542"}
+
+例子：
+
+```cpp
+#include "omp.h"
+
+static long num_steps = 100000000;
+#define MIN_BLK 10000000
+double pi_comp(int Nstart, int Nfinish, double step)
+{
+    int i, iblk;
+    double x, sum = 0.0, sum1, sum2;
+    if(Nfinish - Nstart < MIN_BLK) {
+        for(i = Nstart; i < Nfinish; i++) {
+            x = (i+0.5)*step;
+            sum += 4.0/(1.0+x*x);            
+        }
+    } else {
+        iblk = Nfinish - Nstart;
+        #pragma omp task shared(sum1)
+          sum1 = pi_comp(Nstart, Nfinish - iblk/2, step);
+        #pragma omp task shared(sum2)
+          sum2 = pi_comp(Nfinish - iblk/2, Nfinish, step);
+        #pragma omp taskwait
+        sum = sum1 + sum2;
+    }
+    return sum;
+}
+
+
+int main()
+{
+    int i;
+    double step, pi, sum;
+    step = 1.0 / (double)num_steps;
+    #pragma omp parallel
+    {
+        #pragma omp single
+		sum = pi_comp(0, num_steps, step);
+    }
+    pi = step * sum;
+	return 0;       
+}
+```
+
+
+
+### Good Books
+
+- "Using OpenMP-portable shared memory parallel programing"
+
+- "Patterns for Parallel Programing"
+
+- "Introduction to Concurrency in Programming Languages"
+
+- "The Art of Concurrency"
+
+  
