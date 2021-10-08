@@ -46,32 +46,32 @@ mermaid: true
 
 ## 并发 vs. 并行
 
-| Concurrency             | Parallelism                  |
+| 并发                                       | 并行                                       |
 |---------------------|:----------------------------------|
-| A condition of a system in which multiple tasks are <br>**logically** active at one time. | A condition of a system in which multiple tasks are <br>**actually** active at one time. |
+| 系统中多个任务同时在**逻辑上**处于活动状态 | 系统中多个任务同时在**实际上**处于活动状态 |
 
 
 
-| Concurrent Applications                                      | Parallel Applications                                        |
+| 并发应用                                                     | 并行应用                                                     |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| An application for which computations **logically**           execute<br>simultaneously due to the semantics of the application. <br> The problem is fundamentally concurrent. | An application for which the computations actually **execute** <br>simutanenously in oder to compute a problem in less time. <br>The problem doesn't inherently require concurrency...<br>you can state it sequenttially. |
+| 根据应用的语义，计算在**逻辑上**同时执行的一种应用程序。<br>这个问题基本上是同时发生的。 | 一种应用程序，其计算**实际上**是同时执行的<br>以便在更短的时间内计算问题<br/>问题本身可以串行描述，并不需要并发性。 |
 
 ## OpenMP
-- An API for writing multithreaded applications.
-- A set of compiler directives and library routines for parallel applications programmers.
-- Greatlt simplifies writing multi-threaded(MT) programs in Fortran, C and C++.
+- 用于编写**多线程应用**的`API`。
+- 为**并行应用**程序员提供的一组编译器指令和库方法。
+- 极大简化了`Fortran`，`C/C++`**多线程程序**的编写。
 
-### OpenMP Solutuion Stack
+### OpenMP解决方案栈
 
 ![OpenMP solution stack](../../img/openMP/introduction-to-openmp-intel/openmp-solution-stack.png?raw=true){: width="1086" height="542"}
 
-### OpenMP Core syntax
-- Most of the constructs in OpenMP are compiler directives.
+### OpenMP核心语法
+- OpenMP中大部分constructs是compiler directives.
 - `#pragma omp construct [clause [clause]...]`
 - `#pragma omp parallel num_threads(4)`
 - `#include <omp.h>`
-- Most OpenMP constructs apply to a "Structured Block".
-- "Structured Block": A block of one or more statements with one point of entry at the top and one point of exit at the bottom.
+- 大部分`OpenMP` `constructs`作用于`Structured Block`.
+- `Structured Block`: 一个或多个语句块，顶部有一个入口点，底部有一个出口点。
 
 
 
@@ -85,7 +85,7 @@ export OMP_NUM_THREADS=4
 ./a.out
 ```
 ## Exercise 1
-Verify that your OMP environment works, write a multithreaded program that prints "Hello World".
+**Verify that your OMP environment works, write a multithreaded program that prints "Hello World"**.
 
 
 
@@ -106,24 +106,27 @@ int main()
   }
 }
 ```
-`#pragma omp parallel` asks for the default num of threads.
-`omp_get_thread_num()` gets a unique identifier for each thread. range [0,N].
+`#pragma omp parallel` 申请默认数量的线程。
+`omp_get_thread_num()` 返回每个线程的唯一标识。范围是`[0,N]`。
 
 ## 共享内存计算机
 Any computer composed of multiple processing elements that share an address space. There are two classes:
-### 对称多处理器(SMP)
-A shared address space with "equal-time" access for each processor, and the OS treats every processor the same way.
 
-### 非统一地址空间多处理器(NUMA)
-Different memory regions have different access costs...think of memory segmented into "Near" and "Far" momory.
+- 对称多处理器(SMP)
+
+  一个共享地址空间，每个处理器访问地址空间的时间消耗是相同的，操作系统以相同的方式处理每个处理器。
+
+- 非统一地址空间多处理器(NUMA)
+
+  不同的内存区域具有不同的访问成本。想像将内存分为“近”内存和“远”内存。
 
 ## OpenMP概览
-- OpenMP is a multi-threading, shared address model.
-- Threads communicate by sharing variables.
-- Unintended sharing of data causes race conditions.
-- Race conditions: when the program's outcome changes as the threads are scheduled differently.
-- To control race conditioins, use synchronization to protect data conflicts.
-- Synchronization is expensive.
+- OpenMP是一种多线程共享地址模型。
+- 线程间通过共享变量进行通信。
+- 意外共享数据会导致竞争状况。
+- 竞争条件：当程序的结果随着线程调度的不同而改变时。
+- 要控制竞争条件，请使用同步来保护数据冲突。
+- 同步是昂贵的。
 
 
 
