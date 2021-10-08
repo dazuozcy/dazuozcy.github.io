@@ -36,7 +36,7 @@ mermaid: true
 
 | 单核架构             | 多核架构                  |
 |---------------------|:---------------------------------:|
-|Capacitance = C <br> Voltage = V <br>Frequency = F <br>Power = CV^2F | Capacitance = 2.2C <br> Voltage = 0.6V <br>Frequency = 0.5F <br>Power = 0.396CV^2F | 
+|Capacitance = C <br> Voltage = V <br>Frequency = F <br>Power = $CV^{2F}$ | Capacitance = 2.2C <br> Voltage = 0.6V <br>Frequency = 0.5F <br>Power = $0.396CV^{2F}$ |
 
 对比可以看出多核架构使我们能够以更低的频率完成相同的工作，同时节省大量的功耗。
 
@@ -54,7 +54,7 @@ mermaid: true
 
 | Concurrent Applications                                      | Parallel Applications                                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| An application for which computations logically           execute<br>simultaneously due to the semantics of the application. <br> The problem is fundamentally concurrent. | An application for which the computations actually execute <br>simutanenously in oder to compute a problem in less time. <br> The problem doesn't inherently require concurrency...you can state it sequenttially. |
+| An application for which computations **logically**           execute<br>simultaneously due to the semantics of the application. <br> The problem is fundamentally concurrent. | An application for which the computations actually **execute** <br>simutanenously in oder to compute a problem in less time. <br>The problem doesn't inherently require concurrency...<br>you can state it sequenttially. |
 
 ## OpenMP
 - An API for writing multithreaded applications.
