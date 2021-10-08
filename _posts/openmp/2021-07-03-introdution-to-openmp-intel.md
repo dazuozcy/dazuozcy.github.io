@@ -31,7 +31,7 @@ mermaid: true
 
 但是有一点不得不考虑，那就是功耗。根据Intel的研究，功耗和性能有这样一个拟合关系`power = perf^1.74`。
 
-![image](../img/openMP/introduction-to-openmp-intel/comparison-between-two-archs.png){: width="1086" height="542"}
+![image](../../img/openMP/introduction-to-openmp-intel/comparison-between-two-archs.png){: width="1086" height="542"}
 
 
 | 单核架构             | 多核架构                  |
@@ -61,7 +61,7 @@ mermaid: true
 
 ### OpenMP Solutuion Stack
 
-![OpenMP solution stack](../img/openMP/introduction-to-openmp-intel/openmp-solution-stack.png?raw=true){: width="1086" height="542"}
+![OpenMP solution stack](../../img/openMP/introduction-to-openmp-intel/openmp-solution-stack.png?raw=true){: width="1086" height="542"}
 
 ### OpenMP Core syntax
 - Most of the constructs in OpenMP are compiler directives.
@@ -129,13 +129,13 @@ Different memory regions have different access costs...think of memory segmented
 
 ## fork-join并行
 
-![fork-join-parallellism](../img/openMP/introduction-to-openmp-intel/openmp-fork-join-parallellism.png?raw=true){: width="542" height="242"}
+![fork-join-parallellism](../../img/openMP/introduction-to-openmp-intel/openmp-fork-join-parallellism.png?raw=true){: width="542" height="242"}
 
 上图中蓝色背景的部分就称为**并行域**， 里面是**a team of threads**.
 总体就是在某个时刻fork若干个线程, 在另外某个时刻join到一起。
 
 下面是一个简单的例子
-![openmp-execution-model-example](../img/openMP/introduction-to-openmp-intel/openmp-execution-model-example.png?raw=true){: width="542" height="242"}
+![openmp-execution-model-example](../../img/openMP/introduction-to-openmp-intel/openmp-execution-model-example.png?raw=true){: width="542" height="242"}
 
 ## Exercise 2
 把下面这个串行版本的计算`Pi`值的程序改成并行版本
@@ -200,7 +200,7 @@ void calc_pi_omp_v1()
 ## False Sharing
 If independent data elements happen to sit on the same cache line, each update will cause the cache lines to "slosh back and forth" between threads.
 
-![false sharing](../img/openMP/introduction-to-openmp-intel/openmp-false-sharing.png?raw=true){: width="542" height="242"}
+![false sharing](../../img/openMP/introduction-to-openmp-intel/openmp-false-sharing.png?raw=true){: width="542" height="242"}
 
 ```c
 #define NUM_THREADS 4
@@ -417,7 +417,7 @@ In a reduction-operation the operator is applied to all variables in the list. T
 - Possible reduction operators with initialization value:
 `+ (0), * (1), - (0), & (~0), ^ (0), | (0), && (1), || (0), min (largest number), max (least number)`
 
-![reduction](../img/openMP/reduction.png){: width="1086" height="542"}
+![reduction](../../img/openMP/reduction.png){: width="1086" height="542"}
 
 
 
@@ -907,7 +907,7 @@ The runtime system decides when tasks are executed.
 
 
 
-![Task clause](../img/openMP/task-clause.png?raw=true){: width="1086" height="542"}
+![Task clause](../../img/openMP/task-clause.png?raw=true){: width="1086" height="542"}
 
 ## `taskwait` directive
 - It's a stand-alone directive
@@ -916,7 +916,7 @@ The runtime system decides when tasks are executed.
     ```
 - wait in the completion of child tasks of the current task; just direct children, not all descendant tasks; includes an implicit task scheduling point(TSP)
 
-![taskwait](../img/openMP/taskwait.png?raw=true){: width="1086" height="542"}
+![taskwait](../../img/openMP/taskwait.png?raw=true){: width="1086" height="542"}
 
 ## `if` clause
 ### The `if` clause of a task construct
@@ -932,9 +932,9 @@ The runtime system decides when tasks are executed.
     - the parent task resumes when the task finishes
 
 - This is known as undeferred task
-![task-if-clause](../img/openMP/task-if-clause.png?raw=true){: width="1086" height="542"}
+![task-if-clause](../../img/openMP/task-if-clause.png?raw=true){: width="1086" height="542"}
 
-![task-if-clause2](../img/openMP/task-if-clause2.png?raw=true){: width="1086" height="542"}
+![task-if-clause2](../../img/openMP/task-if-clause2.png?raw=true){: width="1086" height="542"}
 
 ## Tasking Overheads
 ### Typical overheads in task-based programs are:
@@ -1010,11 +1010,11 @@ void foo() {
 }
 ```
 
-![private-lifetime](../img/openMP/private-lifetime.png?raw=true){: width="1086" height="542"}
+![private-lifetime](../../img/openMP/private-lifetime.png?raw=true){: width="1086" height="542"}
 
 ### Orphaned  Task Variables
 - Arguments passed by reference are `firstprivate` by default in orphaned task generating constructs, example:
-![private-lifetime](../img/openMP/orphaned-task-variables.png?raw=true){: width="1086" height="542"}
+![private-lifetime](../../img/openMP/orphaned-task-variables.png?raw=true){: width="1086" height="542"}
 
 
 
@@ -1037,13 +1037,13 @@ void foo() {
 }
 ```
 
-![reduction](../img/openMP/execution-of-tasks.png){: width="1086" height="542"}
+![reduction](../../img/openMP/execution-of-tasks.png){: width="1086" height="542"}
 
 
 
 # 23. 可怕的东西:内存模型,Atomics,Flush(Pairwise同步)
 
-![reduction](../img/openMP/introduction-to-openmp-intel/openmp-memory-model.png){: width="1086" height="542"}
+![reduction](../../img/openMP/introduction-to-openmp-intel/openmp-memory-model.png){: width="1086" height="542"}
 
 **sequential consistency**
 
@@ -1373,7 +1373,7 @@ void calc_pi_reduction()
 
 - Reconbine solutions to subproblems to solve original global problem.
 
-![image](../img/openMP/divide-and-conquer.png){: width="1086" height="542"}
+![image](../../img/openMP/divide-and-conquer.png){: width="1086" height="542"}
 
 例子：
 
