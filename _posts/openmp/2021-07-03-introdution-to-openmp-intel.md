@@ -9,7 +9,7 @@ math: true
 mermaid: true
 ---
 
-这是一门非常优秀的OpenMP入门教程，讲解人也曾参与过OpenMP的开发。
+[这是](https://www.bilibili.com/video/BV1SW411s7ST?spm_id_from=333.999.0.0)一门非常优秀的`OpenMP`入门教程，讲解人`Tim Mattson`也曾参与过`OpenMP`的开发。
 
 # 1. 概述
 课程是`简洁的lectures` + `简短的execises`的方式，讲究边学边练边掌握。
@@ -29,7 +29,7 @@ mermaid: true
 
 摩尔定律说集成电路上可容纳的晶体管数量大约每18个月便会增加一倍。芯片上更多的晶体管数量带来了更优秀的性能，作者认为以前程序的性能来自于芯片硬件。你可以随心所欲的写你的软件，不用考虑性能，把性能留给了芯片硬件。更先进(晶体管数量更多)的芯片，更优秀的性能。
 
-但是有一点不得不考虑，那就是功耗。根据Intel的研究，功耗和性能有这样一个拟合关系`power = perf^1.74`。
+但是有一点不得不考虑，那就是功耗。根据`Intel`的研究，功耗和性能有这样一个拟合关系$power=perf^{1.74}$。
 
 ![image](../../img/openMP/introduction-to-openmp-intel/comparison-between-two-archs.png){: width="1086" height="542"}
 
@@ -47,12 +47,14 @@ mermaid: true
 ## 并发 vs. 并行
 
 | Concurrency             | Parallelism                  |
-|---------------------|:---------------------------------:|
-| A condition of a system in which multiple tasks are **logically** active at one time.| A condition of a system in which multiple tasks are **actually** active at one time. | 
+|---------------------|:----------------------------------|
+| A condition of a system in which multiple tasks are <br>**logically** active at one time. | A condition of a system in which multiple tasks are <br>**actually** active at one time. |
 
-|Concurrent Applications   |Parallel Applications|
-|--------------------------|---------------------|
-|An application for which computations logically execute simultaneously due to the semantics of the application. <br> The problem is fundamentally concurrent. | An application for which the computations actually execute simutanenously in oder to compute a problem in less time. <br> The problem doesn't inherently require concurrency...you can state it sequenttially.|
+
+
+| Concurrent Applications                                      | Parallel Applications                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| An application for which computations logically           execute<br>simultaneously due to the semantics of the application. <br> The problem is fundamentally concurrent. | An application for which the computations actually execute <br>simutanenously in oder to compute a problem in less time. <br> The problem doesn't inherently require concurrency...you can state it sequenttially. |
 
 ## OpenMP
 - An API for writing multithreaded applications.
