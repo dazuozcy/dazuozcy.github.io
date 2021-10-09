@@ -89,7 +89,7 @@ export OMP_NUM_THREADS=4
 
 
 
-# 5. 讨论1-Hello World和线程如何工作的
+# 5. 讨论1-`Hello World`、线程如何工作的
 
 ```c
 #include <stdio.h>
@@ -110,13 +110,13 @@ int main()
 `omp_get_thread_num()` 返回每个线程的唯一标识。范围是`[0,N]`。
 
 ## 共享内存计算机
-Any computer composed of multiple processing elements that share an address space. There are two classes:
+任何由共享一份地址空间的多个处理单元组成的计算机。有两类：
 
-- 对称多处理器(SMP)
+- 对称多处理器(`SMP`)
 
   一个共享地址空间，每个处理器访问地址空间的时间消耗是相同的，操作系统以相同的方式处理每个处理器。
 
-- 非统一地址空间多处理器(NUMA)
+- 非统一地址空间多处理器(`NUMA`)
 
   不同的内存区域具有不同的访问成本。想像将内存分为“近”内存和“远”内存。
 
@@ -132,18 +132,17 @@ Any computer composed of multiple processing elements that share an address spac
 
 # 6. 创建线程(`Pi`程序)
 
-## fork-join并行
+## `fork-join`并行
 
 ![fork-join-parallellism](../../img/openMP/introduction-to-openmp-intel/openmp-fork-join-parallellism.png?raw=true){: width="542" height="242"}
 
-上图中蓝色背景的部分就称为**并行域**， 里面是**a team of threads**.
-总体就是在某个时刻fork若干个线程, 在另外某个时刻join到一起。
+在某个时刻`fork`若干个线程，在另外某个时刻`join`到一起。下面是一个简单的例子：
 
-下面是一个简单的例子
 ![openmp-execution-model-example](../../img/openMP/introduction-to-openmp-intel/openmp-execution-model-example.png?raw=true){: width="542" height="242"}
 
 ## Exercise 2
-把下面这个串行版本的计算`Pi`值的程序改成并行版本
+**把下面这个串行版本的计算`Pi`值的程序改成并行版本**。
+
 ```c
 void calc_pi_serial()
 {
@@ -199,10 +198,11 @@ void calc_pi_omp_v1()
     printf("pi: %.16g in %.16g secs\n", pi, omp_get_wtime() - start);
 }
 ```
-上述并行版本可以得到正确的结果，但是当NUM_THREADS的值配置的更大的时候，耗时反而增加了。
-原因是**salse sharing**.
+上述并行版本可以得到正确的结果，但是当`NUM_THREADS`的值配置的更大的时候，耗时反而增加了。
 
-## False Sharing
+原因是**伪共享**(**false sharing**)。
+
+## 伪共享
 If independent data elements happen to sit on the same cache line, each update will cause the cache lines to "slosh back and forth" between threads.
 
 ![false sharing](../../img/openMP/introduction-to-openmp-intel/openmp-false-sharing.png?raw=true){: width="542" height="242"}
@@ -239,31 +239,29 @@ void calc_pi_omp_v1()
     printf("pi: %.16g in %.16g secs\n", pi, omp_get_wtime() - start);
 }
 ```
-上述解决方案中通过增加[PAD]这一维，来保证sum[nthreads]中连续的元素存在于不同的cacheline上。
+上述解决方案中通过增加`[PAD]`这一维，来保证`sum[nthreads]`中连续的元素存在于不同的`cache line`上。
 
 
 
 # 8. 同步(再看`Pi`程序)
 
-- OpenMP is multi-threading, shared address model.
-- Unintended sharing of data causes race conditions.
-- To control race conditions, use synchronization to protect data confilcts.
-- Change how data is accessed to minimize the need for synchronization.
+- OpenMP是一种多线程共享地址模型。
+- 理解共享数据会导致竞争状况。
+- 要控制竞争条件，请使用同步来保护数据冲突。
+- 改变数据的访问方式来最小化对同步的需求。
 
-
-## 同步
 ### 高层同步:
-- Critical(Mutual exclusion)
-- Atomic
-- Barrier
-- Ordered
+- `critical`(Mutual exclusion)
+- `atomic`
+- `barrier`
+- `ordered`
 
 ### 底层同步:
-- Flush
-- Locks(both simple and nested)
+- `flush`
+- `locks`(both simple and nested)
 
-## `critical` 原语
-在某一时刻，只有1个线程会执行critical section，不会有多个线程同时执行.
+## `critical`原语
+在某一时刻，只有`1`个线程会执行`critical` 块，不会有多个线程同时执行。
 
 ```cpp
 float res;
@@ -282,7 +280,8 @@ float res;
 ```
 
 ## `atomic`原语
-The statements inside the atomic must be one of the following forms:
+`atomic`里的语句只能是下列形式中的一种。
+
 ```
 x binop = expr
    x++
@@ -305,13 +304,15 @@ x is an lvalue of scalar type and binop is a non-overloaded built in operator.
 ```
 
 ## Exercise 3
-修改Exercise 2中的代码，来解决由于sum数组引入的false sharing问题。
+**修改`Exercise 2`中的代码，来解决由于`sum`数组引入的`false sharing`问题**。
 
 
 
-# 9. 讨论3-同步的开销和消除False Sharing
+# 9. 讨论3-同步的开销和消除伪共享
 
-在7的解决方案中通，过增加[PAD]这一维，来保证sum[nthreads]中连续的元素存在于不同的cache line上，从而消除了false sharing。但是cache line的size在不同机器上可能不一样，7的解决方案就不具有可移植性，并且不够优雅。
+在`7`的解决方案中，通过增加`[PAD]`这一维，来保证`sum[nthreads]`中连续的元素存在于不同的`cache line`上，从而消除了伪共享。
+
+但是`cache line`的`size`在不同机器上可能不一样，`7`的解决方案就不具有可移植性，并且不够优雅。
 
 ```cpp
 void calc_pi_omp_v2()
@@ -1368,15 +1369,15 @@ void calc_pi_reduction()
 }
 ```
 
-### Divide and Conquer Pattern
+### 分治Pattern
 
-- Use when a problem includes a method to divide into subproblems and a way to recombine solutions of subproblems into a global solution.
+- 当问题存在**分解成子问题的方法**和**将子问题的解重新组合为全局解的方法**时使用。
 
-- Define a split operation.
+- 定义一个分解操作。
 
-- Continue to split the problem until subproblems are small enough to solve directly.
+- 持续分解直到子问题小到可以直接求解。
 
-- Reconbine solutions to subproblems to solve original global problem.
+- 将子问题的解组合起来解决原始的全局问题。
 
 ![image](../../img/openMP/divide-and-conquer.png){: width="1086" height="542"}
 
@@ -1426,14 +1427,14 @@ int main()
 
 
 
-### Good Books
+# 推荐的参考书
 
-- "Using OpenMP-portable shared memory parallel programing"
+- "*Using OpenMP-portable shared memory parallel programing*"
 
-- "Patterns for Parallel Programing"
+- "*Patterns for Parallel Programing*"
 
-- "Introduction to Concurrency in Programming Languages"
+- "*Introduction to Concurrency in Programming Languages*"
 
-- "The Art of Concurrency"
+- "*The Art of Concurrency*"
 
   
