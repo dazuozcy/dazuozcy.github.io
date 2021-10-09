@@ -134,7 +134,9 @@ int main()
 
 ## `fork-join`并行
 
-![fork-join-parallellism](../../img/openMP/introduction-to-openmp-intel/openmp-fork-join-parallellism.png?raw=true){: width="542" height="242"}
+![fork-join-parallellism](../../img/openMP/fork-join.png){: width="542" height="242"}
+
+![fork-join](../../img/openMP/introduction-to-openmp-intel/openmp-fork-join-parallellism.png){: width="542" height="242"}
 
 在某个时刻`fork`若干个线程，在另外某个时刻`join`到一起。下面是一个简单的例子：
 
