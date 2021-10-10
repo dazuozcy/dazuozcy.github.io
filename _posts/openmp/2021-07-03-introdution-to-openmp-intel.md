@@ -363,23 +363,23 @@ void calc_pi_omp_v2()
 - Task Construct
 
 ## Loop Worksharing Construct
-### The Schedule Clause
-The Schedule Clause affects how loop iterations are mapped onto threads.
+### Schedule Clause
+`schedule`子句影响循环迭代映射到线程的方式。
 
-- schedule(static [, chunk]): Iteration space divided into blocks of chunk size, blocks are assigned to threads in a round-robin fasion. If chunk is not specified: #threads blocks.
-- schedule(dynamic [, chunk]): Iteration space divided into blocks of chunk(not specified: 1) size, blocks are scheduled to threads in the order in which threads finish previous blocks.
-- schedule(guided [, chunk]):Similar to dynamic, but block size starts with implementation-defined value, then is decreased exponentially down to chunk.
-- schedule(runtime): Schedule and chunk size taken from the OMP_SCHEDULE environment variable(or the runtime library)
-- schedule(auto) schedule is left up to the runtime to choose(does not have to be any of the above)
+- `schedule(static [, chunk])`: 迭代空间被划分为`chunk`大小的块，块以`round-robin`方式分配给线程。若未指定块：#线程块。
+- `schedule(dynamic [, chunk])`: 迭代空间分为`chunk`大小（未指定：1）的块，块按线程完成之前块的顺序调度到线程。
+- `schedule(guided [, chunk])`: 与动态相似，但块大小从实现定义的值开始，然后以指数形式减小到块。
+- `schedule(runtime)`: 从`OMP_SCHEDULE`环境变量（或运行时库）获取调度和块大小。
+- `schedule(auto)`: 调度策略在运行时选择（不必是上述任何一项）。
 
-#### When to use the schedule clause
-- static
+#### 何时使用schedule clause
+- `static`
 
-    Pre-determined and predictable by the programmer. Least work at runtime, Scheduling done at compile time.
+    由程序员预先确定。在编译时完成调度，运行时的工作量最小。
 
-- dynamic
+- `dynamic`
 
-    Unpredictable, highly variable work per iteration. Most work at runtime. Complex scheduling logic used at runtime.
+    每次迭代的工作都是不可预测的、高度可变的。运行时的工作量最大。运行时使用复杂调度逻辑。
 
 
 
@@ -412,18 +412,18 @@ for (i = 0; i < MAX; i++) {
 
 ## `reduction`原语
 
-In a reduction-operation the operator is applied to all variables in the list. The variables have to be shared.
+在`reduction`操作中，运算符应用于列表中的所有变量。这些变量必须是共享的。
 - `reduction(operator:list)`
-- The result is provided in the associated reduction variable.
+- 结果在相关的`reduction`变量中提供。
 
-- A local copy of each list variable is made and initialized depending on the "op".
+- 每个列表变量会产生一份本地副本，根据`op`的不同初始化成相应的值。
 
-- Updates occur on the local copy.
+- 对本地副本进行更新。
 
-- local copies are reduced into a single value and combined with the original global value.
+- 本地副本`reduce`成一个值，然后和原始的全局值组合。
 
-- Possible reduction operators with initialization value:
-`+ (0), * (1), - (0), & (~0), ^ (0), | (0), && (1), || (0), min (largest number), max (least number)`
+- 可能的`reduction`操作及初始化值：
+`+ (0)`, `* (1)`, `- (0)`, `& (~0)`, `^ (0)`, `| (0)`, `&& (1)`, `|| (0)`, `min (最大数)`, `max (最小数)`
 
 ![reduction](../../img/openMP/reduction.png){: width="1086" height="542"}
 
@@ -460,9 +460,9 @@ void calc_pi_reduction()
 
 ## `barrier`原语
 
-Threads wait until all the threads of the current Team have reached the barrier.
+线程等待，直到当前组的所有线程都达到屏障。
 
-All worksharing constructs contain an implict barrier at the end.
+所有`worksharing constructs`的末尾都包含隐式屏障。
 
 ```cpp
 #pragma omp parallel
@@ -478,7 +478,7 @@ All worksharing constructs contain an implict barrier at the end.
 
 # 14. OpenMP中的锁
 
-### Lock Routines
+### Lock方法
 
 - `omp_init_lock()`
 - `omp_set_lock()`
@@ -509,7 +509,7 @@ for(i=0; i < NBUCKETS;i++) {
 
 # 15. OpenMP的运行时库方法
 
-Runtime Library Routines
+运行时库方法
 
 - `omp_set_num_threads()`
 - `omp_get_num_threads()`，在并行域外调用这个接口，返回值是1
@@ -554,10 +554,11 @@ void work(int* index) {
 */
 ```
 
-## Changing Storage Attributes
+## 改变存储属性
 
-- shared
-- private
+- `shared`
+- `private`
+    
     ```cpp
     void wrong() {
         int tmp = 0;
@@ -595,19 +596,20 @@ void work(int* index) {
     ```
 - default(private/shared/none)
 
-### Scoping in OpenMP: Dividing variables in shared and private:
+### OpenMP中的作用域: 将变量分为`shared`和`private`:
 - private-list and shared-list on Parallel Region.
 - private-list and shared-list on Worksharing constructs.
 - General default is shared for Parallel Region, firstprivate for Task.
 - Loop control variables on for-constructs are private.
 - Non-static variables local to Parallel Regions are private.
-- private: A new uninitialuized instance is created for the task or each thread executing the construct.
-    - firstprivate: Initialization with the value before encountering the construct
-    - lastprivate: Value of last loop iteration is written back to Master
-- Static variables are shared.
+- `private`: A new uninitialuized instance is created for the task or each thread executing the construct.
+    - `firstprivate`: Initialization with the value before encountering the construct
+    - `lastprivate`: Value of last loop iteration is written back to Master
+- 静态变量是`shared`.
 
-### Privatization of Global/Static Variables
-#### Global/Static variables can be privatized with the `threadprivate` directive
+### 全局/静态变量的私有化
+全局/静态变量可以通过`threadprivate`原语被私有化。
+
 - One instance is created for each thread
     - before the first parallel region is encountered.
     - instance exists until the program ends
@@ -617,8 +619,6 @@ void work(int* index) {
 static i;
 #pragma omp threadprivate(i)
 ```
-**NOTE: Try to avoid the use of threadprivate ans static variables**
-
 
 
 # 18. 讨论5-调试OpenMP程序
