@@ -36,7 +36,11 @@ parallel(nthr_to_use, [&](int ithr, int nthr) {
 
 难道`GCC`的`libgomp.so`里有内存泄漏？
 
-动用`google`大法，在`stackoverflow`上找到了几个非常有用的问题及解答。
+动用`google`大法，在`stackoverflow`上找到了几个非常有用的问题及解答：
+
+- [Increasing memory consumption for 2 alternating OpenMP parallel regions with different number of threads](https://stackoverflow.com/questions/67267035/increasing-memory-consumption-for-2-alternating-openmp-parallel-regions-with-dif)
+
+- [What causes increasing memory consumption in OpenMP-based simulation?](https://stackoverflow.com/questions/67131322/what-causes-increasing-memory-consumption-in-openmp-based-simulation)
 
 
 
