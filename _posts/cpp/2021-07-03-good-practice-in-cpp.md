@@ -143,7 +143,7 @@ int main()
 
 两者写法对比
 
-![CRTP](../img/CRTP-dynamic-poly-static-poly.png){: width="1086" height="542"}
+![CRTP](../../img/CRTP-dynamic-poly-static-poly.png){: width="1086" height="542"}
 
 ### 对象计数器
 ### Polymorphic chaining
