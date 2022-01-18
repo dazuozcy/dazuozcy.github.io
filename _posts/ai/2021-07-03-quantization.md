@@ -1,0 +1,21 @@
+---
+layout: post
+title: "量化"
+author: dazuo
+date: 2020-07-02 20:19:00 +0800
+categories: [AI]
+tags: [量化]
+math: true
+mermaid: true
+---
+
+业界量化方案：
+
+- 感知量化训练(Quantization Aware Training, QAT)
+
+  优点：模型准确率更好，适用于对模型压缩率和准确率要求较高的场景。
+
+- 训练后量化(Post-training Quantization, PAT)
+
+  优点：简单易用，适用于追求高易用性和缺乏训练资源的场景。
+
