@@ -11,11 +11,26 @@ mermaid: true
 
 业界量化方案：
 
-- 感知量化训练(Quantization Aware Training, QAT)
+- **感知量化训练**(Quantization Aware Training, **QAT**)，或者**在线量化**
+
+  在模型中插入伪量化模块模拟量化模型在推理过程中进行的舍入(rounding)和钳位(clamping)操作，从而在训练过程中提高模型对量化效应的适应能力，获得更高的量化模型精度。
 
   优点：模型准确率更好，适用于对模型压缩率和准确率要求较高的场景。
 
-- 训练后量化(Post-training Quantization, PAT)
+- **训练后量化**(Post-training Quantization, **PAT**)，或者**离线量化**
 
   优点：简单易用，适用于追求高易用性和缺乏训练资源的场景。
+
+
+
+量化算法
+
+- 对称/非对称量化
+- 逐层/逐通道量化
+
+
+
+量化方案
+
+- 4、7、8 bit量化
 

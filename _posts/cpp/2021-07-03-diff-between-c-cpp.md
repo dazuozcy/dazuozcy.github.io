@@ -41,6 +41,12 @@ C++ 是一门**偏向系统编程**的通用编程语言，它是
 - 支持面向对象编程
 - 支持泛型编程
 
+
+
+在C语言中，“**数据**”和“**处理数据的操作(函数)**”是分来来声明的，也就是说，语言本身并没有支持“数据和函数”之间的**关联性**。
+
+
+
 # **应用**
 
 [One of the revolutionary features of C++ over traditional languages is its support for exception handling.](https://www.codeproject.com/Articles/2126/How-a-C-compiler-implements-exception-handling)
