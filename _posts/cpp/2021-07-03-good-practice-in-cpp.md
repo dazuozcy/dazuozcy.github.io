@@ -21,7 +21,76 @@ if (Anyone(s, "spring", "summer", "autumn", "winter")) {
 ```
 
 # RAII与pImpl
-[RAII妙用之计算函数耗时](https://zhuanlan.zhihu.com/p/139519294)
+RAII(Resource Acquisition Is Initializationb)，也称为"资源获取即初始化"，是C++里一种资源管理，避免泄漏的惯用法。
+
+C++标准保证在任何情况下，已构造的对象最终会被销毁，即对象的析构函数最终会被调用。
+
+## RAII应用
+
+### ScopeGuard
+
+C++提供了一个叫ScopeGuard的关键技术：通过局部变量析构函数来管理资源，根据是否正常退出来决定是否需要清理资源。
+
+```cpp
+template <typename F>
+class ScopreGuard {
+public:
+    ScopreGuard(F&& fn): m_fn(fn), m_active(true) {}
+    ~ScopreGuard() {
+        if (m_active) {
+            m_fn();
+        }
+    }
+    
+    void dismiss() {
+        m_active = false;
+    }
+    
+private:
+    F m_fn;
+    bool m_active;
+};
+
+struct ScopeGuardOnExit {};
+
+template <typename F>
+static inline ScopeGuard<F> operator+(ScopeGuardOnExit, F&& fn) {
+    return ScopeGuard<F>(std::foward<F>(fn));
+}
+
+#define ON_SCOPE_EXIT \
+	auto __onGuardExit__ = ScopeGuardOnExit{} + [&]
+
+#define CANCEL_SCOPRE_EXIT \
+	__onGuardExit__.dismiss()
+
+
+void process() {
+    char* buf = (char*)malloc(512);
+    
+    // 函数退出时，执行ON_SCOPE_EXIT代码，资源释放统一放在这里
+    ON_SCOPE_EXIT {
+        free(buf);
+        printf("exit func, free buf.");
+    };
+    
+    if (!protcess1(buf)) {
+        return;
+    }
+    if (!protcess2(buf)) {
+        return;
+    }    
+}
+
+```
+
+
+
+### [RAII妙用之计算函数耗时](https://zhuanlan.zhihu.com/p/139519294)
+
+
+
+
 
 # 模板特化
 - 允许某些形式的优化
