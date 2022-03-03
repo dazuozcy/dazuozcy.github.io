@@ -3,7 +3,7 @@ layout: post
 title: "一、计算机系统漫游"
 author: dazuo
 date: 2020-07-02 20:19:00 +0800
-categories: [编译]
+categories: [CSAPP]
 tags: [编译]
 math: true
 mermaid: true
