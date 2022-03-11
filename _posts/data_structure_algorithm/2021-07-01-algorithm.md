@@ -11,11 +11,13 @@ mermaid: true
 
 https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80%9D%E8%B7%AF
 
-第一页完。42号题开始
+前2页完。78号题开始
 
 
 
 # 排序
+
+### [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
 
 
 
@@ -29,6 +31,10 @@ https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80
 
 ### [35. 搜索插入位置](https://leetcode-cn.com/problems/search-insert-position/)
 
+### [69. x 的平方根 ](https://leetcode-cn.com/problems/sqrtx/)
+
+### [74. 搜索二维矩阵](https://leetcode-cn.com/problems/search-a-2d-matrix/)
+
 ### [153. 寻找旋转排序数组中的最小值](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 
@@ -41,9 +47,21 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 ### [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
+### [53. 最大子数组和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+### [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
+
+### [70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+
 
 
 # 贪心
+
+### [45. 跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/)
+
+### [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
+
+### [134. 加油站](https://leetcode-cn.com/problems/gas-station/)
 
 ### [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
@@ -52,10 +70,6 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 ### [763. 划分字母区间](https://leetcode-cn.com/problems/partition-labels/)
 
 
-
-
-
-### [134. 加油站](https://leetcode-cn.com/problems/gas-station/)
 
 
 
