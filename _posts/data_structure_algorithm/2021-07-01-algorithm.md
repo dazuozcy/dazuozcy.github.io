@@ -11,13 +11,25 @@ mermaid: true
 
 https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80%9D%E8%B7%AF
 
-前2页完。78号题开始
+前5页完。257号题开始
 
 
 
 # 排序
 
 [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
+
+## 快速选择
+
+[215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+
+## 堆排序
+
+[215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+
+## 拓扑排序
+
+[207. 课程表](https://leetcode-cn.com/problems/course-schedule/)
 
 
 
@@ -67,6 +79,10 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
+[198. 打家劫舍](https://leetcode-cn.com/problems/house-robber/)
+
+[213. 打家劫舍 II](https://leetcode-cn.com/problems/house-robber-ii/)
+
 
 
 # 贪心
@@ -100,6 +116,12 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 [124. 二叉树中的最大路径和](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 
 [130. 被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)
+
+[199. 二叉树的右视图](https://leetcode-cn.com/problems/binary-tree-right-side-view/)
+
+[200. 岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
+
+[207. 课程表](https://leetcode-cn.com/problems/course-schedule/)
 
 [2049. 统计最高分的节点数目](https://leetcode-cn.com/problems/count-nodes-with-the-highest-score/)
 
