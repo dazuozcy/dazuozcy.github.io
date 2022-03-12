@@ -11,7 +11,7 @@ mermaid: true
 
 https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80%9D%E8%B7%AF
 
-前9页完。820号题开始
+前10页完。1052号题开始
 
 
 
@@ -44,6 +44,10 @@ https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80
 [451. 根据字符出现频率排序](https://leetcode-cn.com/problems/sort-characters-by-frequency/)
 
 
+
+## 煎饼排序
+
+[969. 煎饼排序](https://leetcode-cn.com/problems/pancake-sorting/)
 
 
 
@@ -127,6 +131,12 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/)
 
+[918. 环形子数组的最大和](https://leetcode-cn.com/problems/maximum-sum-circular-subarray/)
+
+[978. 最长湍流子数组](https://leetcode-cn.com/problems/longest-turbulent-subarray/)
+
+[1014. 最佳观光组合](https://leetcode-cn.com/problems/best-sightseeing-pair/)
+
 
 
 # 贪心
@@ -147,7 +157,9 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [763. 划分字母区间](https://leetcode-cn.com/problems/partition-labels/)
 
+[849. 到最近的人的最大距离](https://leetcode-cn.com/problems/maximize-distance-to-closest-person/)
 
+[1007. 行相等的最少多米诺旋转](https://leetcode-cn.com/problems/minimum-domino-rotations-for-equal-row/)
 
 
 
