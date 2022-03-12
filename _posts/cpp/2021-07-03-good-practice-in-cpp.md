@@ -90,9 +90,16 @@ void process() {
 
 
 
+# OutOfLine
+
+`OutOfLine`的基本原理是把对象内部的数据分为热数据和冷数据，把冷数据放在对象外面保存。这样可以提升热数据的内存局部性，减少`cache miss`，从而获得更好的性能，同时不破坏原有对象的封装和`RAII`特性。
+
+[OutOfLine – A Memory-Locality Pattern for High Performance C++](https://blog.headlandstech.com/2018/08/15/outofline-a-memory-locality-pattern-for-high-performance-c/)
+
 
 
 # 模板特化
+
 - 允许某些形式的优化
 - 减少代码膨胀
 
@@ -220,3 +227,4 @@ int main()
 
 # Expression Template
 一个比较优秀的应用就是`Eigen`库。
+

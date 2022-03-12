@@ -11,7 +11,7 @@ mermaid: true
 
 https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80%9D%E8%B7%AF
 
-前5页完。257号题开始
+前9页完。820号题开始
 
 
 
@@ -19,17 +19,31 @@ https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80
 
 [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
 
+[539. 最小时间差](https://leetcode-cn.com/problems/minimum-time-difference/)
+
 ## 快速选择
 
 [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+
+[347. 前 K 个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
+
+[462. 最少移动次数使数组元素相等 II](https://leetcode-cn.com/problems/minimum-moves-to-equal-array-elements-ii/)
 
 ## 堆排序
 
 [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
+[347. 前 K 个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
+
 ## 拓扑排序
 
 [207. 课程表](https://leetcode-cn.com/problems/course-schedule/)
+
+## 桶排序
+
+[451. 根据字符出现频率排序](https://leetcode-cn.com/problems/sort-characters-by-frequency/)
+
+
 
 
 
@@ -51,7 +65,17 @@ https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80
 
 [154. 寻找旋转排序数组中的最小值 II](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
 
+[278. 第一个错误的版本](https://leetcode-cn.com/problems/first-bad-version/)
 
+[300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+
+[354. 俄罗斯套娃信封问题](https://leetcode-cn.com/problems/russian-doll-envelopes/)
+
+[374. 猜数字大小](https://leetcode-cn.com/problems/guess-number-higher-or-lower/)
+
+[540. 有序数组中的单一元素](https://leetcode-cn.com/problems/single-element-in-a-sorted-array/)
+
+[704. 二分查找](https://leetcode-cn.com/problems/binary-search/)
 
 
 
@@ -83,6 +107,26 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [213. 打家劫舍 II](https://leetcode-cn.com/problems/house-robber-ii/)
 
+[338. 比特位计数](https://leetcode-cn.com/problems/counting-bits/)
+
+[354. 俄罗斯套娃信封问题](https://leetcode-cn.com/problems/russian-doll-envelopes/)
+
+[357. 计算各个位数不同的数字个数](https://leetcode-cn.com/problems/count-numbers-with-unique-digits/)
+
+[416. 分割等和子集](https://leetcode-cn.com/problems/partition-equal-subset-sum/)
+
+[509. 斐波那契数](https://leetcode-cn.com/problems/fibonacci-number/)
+
+[583. 两个字符串的删除操作](https://leetcode-cn.com/problems/delete-operation-for-two-strings/)
+
+[647. 回文子串](https://leetcode-cn.com/problems/palindromic-substrings/)
+
+[698. 划分为k个相等的子集](https://leetcode-cn.com/problems/partition-to-k-equal-sum-subsets/)
+
+[740. 删除并获得点数](https://leetcode-cn.com/problems/delete-and-earn/)
+
+[746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/)
+
 
 
 # 贪心
@@ -97,6 +141,10 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
+[452. 用最少数量的箭引爆气球](https://leetcode-cn.com/problems/minimum-number-of-arrows-to-burst-balloons/)
+
+[561. 数组拆分 I](https://leetcode-cn.com/problems/array-partition-i/)
+
 [763. 划分字母区间](https://leetcode-cn.com/problems/partition-labels/)
 
 
@@ -108,6 +156,8 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 [46. 全排列](https://leetcode-cn.com/problems/permutations/)
 
 [78. 子集](https://leetcode-cn.com/problems/subsets/)
+
+[698. 划分为k个相等的子集](https://leetcode-cn.com/problems/partition-to-k-equal-sum-subsets/)
 
 
 
@@ -122,6 +172,12 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 [200. 岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
 
 [207. 课程表](https://leetcode-cn.com/problems/course-schedule/)
+
+[257. 二叉树的所有路径](https://leetcode-cn.com/problems/binary-tree-paths/)
+
+[404. 左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
+
+[617. 合并二叉树](https://leetcode-cn.com/problems/merge-two-binary-trees/)
 
 [2049. 统计最高分的节点数目](https://leetcode-cn.com/problems/count-nodes-with-the-highest-score/)
 
