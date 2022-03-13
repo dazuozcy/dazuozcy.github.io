@@ -11,8 +11,6 @@ mermaid: true
 
 https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80%9D%E8%B7%AF
 
-前10页完。1052号题开始
-
 
 
 # 排序
@@ -51,6 +49,18 @@ https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80
 
 
 
+## 计数排序
+
+[1365. 有多少小于当前数字的数字](https://leetcode-cn.com/problems/how-many-numbers-are-smaller-than-the-current-number/)
+
+
+
+## 自定义排序
+
+[2191. 将杂乱无章的数字排序](https://leetcode-cn.com/problems/sort-the-jumbled-numbers/)
+
+
+
 # 二分
 
 [4. 寻找两个正序数组的中位数](https://leetcode-cn.com/problems/median-of-two-sorted-arrays/)(hard)
@@ -80,6 +90,12 @@ https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80
 [540. 有序数组中的单一元素](https://leetcode-cn.com/problems/single-element-in-a-sorted-array/)
 
 [704. 二分查找](https://leetcode-cn.com/problems/binary-search/)
+
+[1539. 第 k 个缺失的正整数](https://leetcode-cn.com/problems/kth-missing-positive-number/)
+
+[2055. 蜡烛之间的盘子](https://leetcode-cn.com/problems/plates-between-candles/)
+
+[面试题 08.03. 魔术索引](https://leetcode-cn.com/problems/magic-index-lcci/)
 
 
 
@@ -137,7 +153,11 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [1014. 最佳观光组合](https://leetcode-cn.com/problems/best-sightseeing-pair/)
 
+[1137. 第 N 个泰波那契数](https://leetcode-cn.com/problems/n-th-tribonacci-number/)
 
+[1525. 字符串的好分割数目](https://leetcode-cn.com/problems/number-of-good-ways-to-split-a-string/)
+
+[2100. 适合打劫银行的日子](https://leetcode-cn.com/problems/find-good-days-to-rob-the-bank/)
 
 # 贪心
 
@@ -161,6 +181,22 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [1007. 行相等的最少多米诺旋转](https://leetcode-cn.com/problems/minimum-domino-rotations-for-equal-row/)
 
+[1328. 破坏回文串](https://leetcode-cn.com/problems/break-a-palindrome/)
+
+[1338. 数组大小减半](https://leetcode-cn.com/problems/reduce-array-size-to-the-half/)
+
+[1403. 非递增顺序的最小子序列](https://leetcode-cn.com/problems/minimum-subsequence-in-non-increasing-order/)
+
+[1529. 最少的后缀翻转次数](https://leetcode-cn.com/problems/minimum-suffix-flips/)
+
+[1551. 使数组中所有元素相等的最小操作数](https://leetcode-cn.com/problems/minimum-operations-to-make-array-equal/)
+
+[1561. 你可以获得的最大硬币数目](https://leetcode-cn.com/problems/maximum-number-of-coins-you-can-get/)
+
+[1665. 完成所有任务的最少初始能量](https://leetcode-cn.com/problems/minimum-initial-energy-to-finish-tasks/)
+
+[2195. 向数组中追加 K 个整数](https://leetcode-cn.com/problems/append-k-integers-with-minimal-sum/)
+
 
 
 # 回溯
@@ -170,6 +206,10 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 [78. 子集](https://leetcode-cn.com/problems/subsets/)
 
 [698. 划分为k个相等的子集](https://leetcode-cn.com/problems/partition-to-k-equal-sum-subsets/)
+
+[1239. 串联字符串的最大长度](https://leetcode-cn.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters/)
+
+[1253. 重构 2 行二进制矩阵](https://leetcode-cn.com/problems/reconstruct-a-2-row-binary-matrix/)
 
 
 
@@ -192,4 +232,6 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 [617. 合并二叉树](https://leetcode-cn.com/problems/merge-two-binary-trees/)
 
 [2049. 统计最高分的节点数目](https://leetcode-cn.com/problems/count-nodes-with-the-highest-score/)
+
+[剑指 Offer 17. 打印从1到最大的n位数](https://leetcode-cn.com/problems/da-yin-cong-1dao-zui-da-de-nwei-shu-lcof/)
 
