@@ -15,6 +15,50 @@ https://programmercarl.com/0739.%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6.html#%E6%80
 
 # 排序
 
+## sort
+
+```cpp
+void sort (RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+```
+
+```cpp
+vector<int> v = {3,1,4,1,5,9,2,6};
+
+sort(v.begin(),v.end()); // 升序
+sort(v.begin(),v.end(), greater<>()); // 降序
+
+// lamda表达式自定义
+sort(v.begin(),v.end(), [](int a, int b){ return a > b;});
+
+// 非内置类型
+struct TestCase
+{
+    int first;
+    int second;
+};
+
+int main() {
+    vector<TestCase> v = {{4,2}, {1,3},{3,2},{3,1}};
+    auto comp = [](TestCase &a, TestCase &b) {
+        return a.first != b.first ? a.first < b.first : a.second < b.second;
+    };
+    sort(v.begin(), v.end(), comp);
+    for(auto it = v.begin(); it != v.end(); ++it)
+        cout<<(*it).first<<" " << (*it).second << endl;
+    return 0;
+}
+/* 输出：
+1 3
+3 1
+3 2
+4 2
+*/
+```
+
+
+
+
+
 [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
 
 [539. 最小时间差](https://leetcode-cn.com/problems/minimum-time-difference/)
@@ -211,6 +255,8 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [1253. 重构 2 行二进制矩阵](https://leetcode-cn.com/problems/reconstruct-a-2-row-binary-matrix/)
 
+[2044. 统计按位或能得到最大值的子集数目](https://leetcode-cn.com/problems/count-number-of-maximum-bitwise-or-subsets/)
+
 
 
 # DFS
@@ -230,6 +276,8 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 [404. 左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
 
 [617. 合并二叉树](https://leetcode-cn.com/problems/merge-two-binary-trees/)
+
+[2044. 统计按位或能得到最大值的子集数目](https://leetcode-cn.com/problems/count-number-of-maximum-bitwise-or-subsets/)
 
 [2049. 统计最高分的节点数目](https://leetcode-cn.com/problems/count-nodes-with-the-highest-score/)
 
