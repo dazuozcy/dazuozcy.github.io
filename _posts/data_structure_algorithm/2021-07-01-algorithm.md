@@ -31,8 +31,7 @@ sort(v.begin(),v.end(), greater<>()); // 降序
 sort(v.begin(),v.end(), [](int a, int b){ return a > b;});
 
 // 非内置类型
-struct TestCase
-{
+struct TestCase {
     int first;
     int second;
 };
@@ -47,7 +46,8 @@ int main() {
         cout<<(*it).first<<" " << (*it).second << endl;
     return 0;
 }
-/* 输出：
+/* 
+> output:
 1 3
 3 1
 3 2
