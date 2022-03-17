@@ -37,7 +37,7 @@ struct TestCase {
 };
 
 int main() {
-    vector<TestCase> v = {{4,2}, {1,3},{3,2},{3,1}};
+    vector<TestCase> v = { {4, 2}, {1, 3}, {3, 2}, {3, 1} };
     auto comp = [](TestCase &a, TestCase &b) {
         return a.first != b.first ? a.first < b.first : a.second < b.second;
     };
