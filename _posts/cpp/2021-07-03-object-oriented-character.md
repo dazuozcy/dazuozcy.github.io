@@ -36,6 +36,36 @@ C++在布局及存取时间上主要的额外负担是由`virtual`引起的，�
 
 继承机制是面向对象程序设计使代码**可复用**的最重要的手段。
 
+继承包含2部分：
+
+- 接口(interface)
+- 实现(implementation)
+
+```cpp
+class Person {
+public:
+    virtual void Eat() const = 0;  // 纯虚成员函数
+    virtual void Say(const std::string& msg);  // 普通虚成员函数
+    int Name() const; // 非虚成员函数
+};
+
+class Student: public Person {
+    ...
+};
+
+class Teacher: public Person {
+    ...
+};
+```
+
+继承接口和实现主要包括三种方式：
+
+- 纯虚函数（只继承接口），继承的仅是基类成员函数的接口，必须在派生类中重写该函数的实现。
+- 普通虚函数（继承接口和实现，可override），继承的是基类成员函数的接口和缺省的实现。由派生类自行选择是否重写该函数。
+- 非虚成员函数（继承接口和实现，不可override），继承的是基类成员函数的接口和强制的实现。派生类中不能重新实现该接口。
+
+
+
 ## 底层原理
 
 ## 虚继承
