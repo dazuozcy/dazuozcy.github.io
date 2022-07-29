@@ -9,6 +9,14 @@ math: true
 mermaid: true
 ---
 
+
+
+# SFINAE
+
+https://modern-cpp.readthedocs.io/zh_CN/latest/sfinae.html
+
+
+
 ```cpp
 static auto Anyone = [](auto&& k, auto&&... args) { return ((args == k) || ...); };
 
@@ -19,6 +27,8 @@ if (Anyone(s, "spring", "summer", "autumn", "winter")) {
     ...    
 }
 ```
+
+
 
 # RAII与pImpl
 RAII(Resource Acquisition Is Initializationb)，也称为"资源获取即初始化"，是C++里一种资源管理，避免泄漏的惯用法。
