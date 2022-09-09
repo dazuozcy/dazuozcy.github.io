@@ -17,6 +17,82 @@ mermaid: true
 
 
 
+## 源码阅读
+
+### `Normal`的`__init__`里没有`sample_shape`参数，这里为什么传`sample_shape`？
+
+```python
+beta = ed2.Normal(loc=0.0, scale=2.0, name='beta', sample_shape=3)
+```
+
+这里并不是直接调用了`Normal`分布的`__init__`接口，而是调用的`make_log_joint_fn`里的`interceptor`，
+
+`rv_constructor`就是`make_random_variable`，根据名字知道其作用是构造随机变量。
+
+在构造随机变量时，会把`sample_shape`从参数列表里弹出，然后调用`Normal`分布的`__init__`接口。
+
+源码如下所示(`edward2/tensorflow/generated_random_variables.py`)：
+
+```python
+def make_random_variable(distribution_cls):
+  """Factory function to make random variable given distribution class."""
+  @traceable
+  @functools.wraps(distribution_cls, assigned=("__module__", "__name__"))
+  @expand_docstring(cls=distribution_cls.__name__,
+                    doc=inspect.cleandoc(
+                        distribution_cls.__init__.__doc__ if
+                        distribution_cls.__init__.__doc__ is not None else ""))
+  def func(*args, **kwargs):
+    # pylint: disable=g-doc-args
+    """Create a random variable for ${cls}.
+
+    See ${cls} for more details.
+
+    Returns:
+      RandomVariable.
+
+    #### Original Docstring for Distribution
+
+    ${doc}
+    """
+    # pylint: enable=g-doc-args
+    sample_shape = kwargs.pop("sample_shape", ())  # 弹出sample_shape参数
+    value = kwargs.pop("value", None)
+    return RandomVariable(distribution=distribution_cls(*args, **kwargs),
+                          sample_shape=sample_shape,
+                          value=value)
+  return func
+```
+
+
+
+###  `object_y`传给`y_obs`后在哪里用？
+
+```python
+object_y = tf.convert_to_tensor(y, name='object_y', dtype=tf.float32)
+
+def target(k, m, beta, delta, sigma):
+    return log_joint(K=K, S=S, tau=tau, trend_indicator=0, k=k, m=m,
+                     beta=beta, delta=delta, sigma=sigma, y_obs=object_y)
+
+energy = -target(k, m, beta, delta, sigma)
+```
+
+`log_joint`的调用中`object_y`传给`y_obs`参数后，在哪里用的？
+
+在`prophet_model`中，通过`name`参数捕获到`y_obs`(等号右边的)，将其作为随机变量`y_obs`(等号左边的)的`value`。
+
+```python
+def prophet_model(xxx):
+    ...
+    y_obs = ed2.Normal(name='y_obs', loc=Y_new, scale=sigma)
+    return y_obs, {k, m, beta, delta, sigma}
+```
+
+
+
+
+
 [Facebook的时间序列预测算法Prophet：Forecasting at scale](https://zhuanlan.zhihu.com/p/492992712)
 
 
