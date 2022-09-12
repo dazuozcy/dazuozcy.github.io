@@ -3,8 +3,8 @@ layout: post
 title: "时间序列预测"
 author: dazuo
 date: 2020-07-02 20:19:00 +0800
-categories: [AI]
-tags: [时间序列预测]
+categories: [时间序列预测]
+tags: [时间序列]
 math: true
 mermaid: true
 ---
