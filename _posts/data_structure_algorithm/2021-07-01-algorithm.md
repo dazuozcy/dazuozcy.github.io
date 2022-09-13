@@ -219,6 +219,8 @@ https://leetcode-cn.com/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-
 
 [561. 数组拆分 I](https://leetcode-cn.com/problems/array-partition-i/)
 
+[670. 最大交换](https://leetcode.cn/problems/maximum-swap/)
+
 [763. 划分字母区间](https://leetcode-cn.com/problems/partition-labels/)
 
 [849. 到最近的人的最大距离](https://leetcode-cn.com/problems/maximize-distance-to-closest-person/)
