@@ -93,6 +93,10 @@ def prophet_model(xxx):
 
 
 
+`log_joint_func`中调用分布的`log_prob`，策略是如果分布有实现`_log_prob`接口，则直接调用`_log_prob`，否则再看有没有实现`_prob`接口，则调用`_prob`接口，并对结果求对数。
+
+
+
 [Facebook的时间序列预测算法Prophet：Forecasting at scale](https://zhuanlan.zhihu.com/p/492992712)
 
 
