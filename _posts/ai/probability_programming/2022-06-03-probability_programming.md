@@ -121,3 +121,8 @@ def prophet_model(xxx):
 如果你观察 $x$，并想估计产生它的 $\theta$，最大似然原理就是说要选择最大似然 $\theta$，也就是使 $p(x|\theta)$ 最大化的$\theta$。
 
 这与最大后验或`MAP`形成对比，后者是使 $p(\theta | x)$ 最大化的 $\theta$。由于 $x$ 是固定的，这相当于最大化 $p(\theta) p(x | \theta)$，即 $\theta$ 的先验概率与 $\theta$ 的似然的乘积。
+
+
+
+[**MindSpore概率采样库系列（一）：手把手教你开发概率分布**](https://mindspore.cn/news/newschildren?id=326)
+
