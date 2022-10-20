@@ -10,9 +10,11 @@ mermaid: true
 ---
 
 - `Ascend`上`AdamWeightDecay`优化器是通过小算子组成而成，代码见附录。
-- `Pynative`模式下正向过程完全是按照Python语法进行执行，对于某个小算子，就是从Python侧通过pybind11调用C++侧实现。所以多个小算子就会涉及到Python侧与C++侧的多次切换。
+- `Pynative`模式下正向过程完全是按照`Python`语法进行执行，对于某个小算子，就是从`Python`侧通过`pybind11`调用`C++`侧实现。所以多个小算子就会涉及到`Python`侧与`C++`侧的多次切换。
 
-基于上面2点，有一种`Pynative`模式下网络训练性能优化的思路：在Python侧把`AdamWeightDecay`做成一个大算子，然后通过后端Fission pass把大算子拆分成对应的小算子。这样就大大减少了Python侧与C++侧切换次数，提升了性能（Bert Base 单step提升500ms）。
+基于上面2点，有一种`Pynative`模式下网络训练性能优化的思路：在`Python`侧把`AdamWeightDecay`做成一个大算子，然后通过后端`Fission` pass把大算子拆成对应小算子。这样大大减少`Python`侧与`C++`侧切换次数，提升了性能(`Bert Base` 单step提升`500ms`)。
+
+这里`C++`侧需要拆分是因为`Ascend`上的`kernel`依赖于`CANN`包，不能自己实现。如果`kernel`可以自己实现，比如`GPU`或`CPU`上，就可以直接按照大算子来实现`kernel`，代码见附录，这样性能提升会更明显。
 
 
 
@@ -20,7 +22,11 @@ mermaid: true
 
 [MindSpore AdamWeightDecay 优化器算子官网介绍](https://mindspore.cn/docs/zh-CN/r1.8/api_python/ops/mindspore.ops.AdamWeightDecay.html?highlight=AdamWeightDecay)
 
+
+
 [Fission 代码](https://gitee.com/mindspore/mindspore/pulls/14247)
+
+
 
 `AdamWeightDecay`小算子实现：
 
@@ -81,4 +87,8 @@ def _update_run_op(beta1, beta2, eps, lr, weight_decay, param, m, v, gradient, d
         return op_cast(next_param, F.dtype(param))
     return op_cast(gradient, F.dtype(param))
 ```
+
+
+
+[GPU上AdamWeightDecay大算子实现](https://gitee.com/mindspore/mindspore/pulls/12826)
 
