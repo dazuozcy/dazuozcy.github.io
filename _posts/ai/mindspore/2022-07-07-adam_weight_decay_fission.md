@@ -3,7 +3,7 @@ layout: post
 title: "AdamWeightDecay fission"
 author: dazuo
 date: 2020-07-02 20:19:00 +0800
-categories: [fission]
+categories: [MindSpore]
 tags: [AdamWeightDecay, fission]
 math: true
 mermaid: true

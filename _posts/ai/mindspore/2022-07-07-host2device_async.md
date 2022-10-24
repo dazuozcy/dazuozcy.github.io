@@ -3,7 +3,7 @@ layout: post
 title: "内存同步模式"
 author: dazuo
 date: 2020-07-02 20:19:00 +0800
-categories: [内存同步]
+categories: [MindSpore]
 tags: [内存同步]
 math: true
 mermaid: true

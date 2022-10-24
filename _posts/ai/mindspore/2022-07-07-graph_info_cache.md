@@ -3,7 +3,7 @@ layout: post
 title: "图缓存"
 author: dazuo
 date: 2020-07-02 20:19:00 +0800
-categories: [性能优化]
+categories: [MindSpore]
 tags: [图缓存]
 math: true
 mermaid: true
