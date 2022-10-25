@@ -9,51 +9,11 @@ math: true
 mermaid: true
 ---
 
-
-
-
-
-**参数较多(即拥有更多冗余参数)**的模型在量化后可以获得比精简模型更好的精度。
-
-**饱和式量化**方式：忽略一些离群点，使得量化噪声更小。
-
-
-
-`Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference`
-
-摘要
-
-提出了一种量化方案：允许使用整型进行推理，在常用的只支持整型计算单元的硬件上可以比浮点推理效率更高。
-
-还设计了一种训练方案，使得端到端模型精度和时延之间有更好的权衡。
-
-
-
-引言
-
-很广泛的研究：在精度损失较小的前提下，减小模型体积和推理时间。主要分为2类：
-
-- 设计新网络架构，以高效利用计算/内存操作。
-- 将32位浮点的权重或者激活量化到低比特的表示。
-
-
-
-
-
-
-
 量化根据是否需要重训练，分为：
 
 - **感知量化训练**，优点：模型准确率更好，适用于对模型压缩率和准确率要求较高的场景。
 
 - **训练后量化**，优点：简单易用，适用于追求高易用性和缺乏训练资源的场景。
-
-
-
-量化根据对象的不同，分为：
-
-- 权重(weight)量化
-- 数据(activation)量化
 
 
 
@@ -66,6 +26,13 @@ mermaid: true
 通常，训练后的模型权重已经确定，因此可根据权重的数值离线计算得到权重的量化参数。
 
 而通常数据是在线输入的，无法准确获取数据的数值范围，通常需要一个较小的有代表性的数据集来模拟在线数据的分布，利用数据集执行前向推理，得到对应的中间结果，并根据这些浮点结果离线计算出数据的量化参数。
+
+
+
+量化根据对象的不同，分为：
+
+- 权重(weight)量化
+- 数据(activation)量化
 
 
 
@@ -136,34 +103,71 @@ mermaid: true
 
 
 
-# **感知量化训练**
+# **量化感知训练**
 
-`Quantization Aware Training`, **QAT**，或者**在线量化**
+`Quantization Aware Training`, **QAT**，或者**在线量化**。
 
-在模型中**需要记录量化参数的地方**插入**伪量化节点**，其作用有二：
+MindSpore的感知量化训练是一种伪量化的过程，它在模型中**需要记录量化参数的地方**插入**伪量化节点**，其作用有二：
 
-- 找到输入、权重等待量化数据的分布，找到待量化数据的最大和最小值；
+- 统计流经算子节点的数据的最大最小值，找到输入、权重等待量化数据的分布；
 - 模拟量化模型在量化到低比特时引入的精度损失(来自rounding和clamping操作)，将该损失作用到网络模型中，传递给损失函数，让优化器在训练过程中对该损失值进行优化，从而提高模型对量化效应的适应能力，获得更高的量化模型精度。
 
 
 
-## 量化算法
-
-- `ARQ`算法(`Adaptive Range Quantization`)
-
-  同训练后量化的`ARQ`。
-
-- `ULQ`算法(`Universal Linear Quantization`)
+一般对于权重的量化使用对称量化，对于激活的量化使用非对称量化。原因是对于权重而言，一般是对称的，如`[-6.0, 6.0]`，采用对称量化有更少的计算量。对于激活而言，其值分布在一侧，比如ReLU输出就是`[0.0, +∞)`，如果采用对称量化，则会比较浪费。
 
 
 
-### `ULQ`算法
+## 对称量化
 
-在训练过程中不断训练量化因子，以减少量化损失。
+原始float数据与量化后的INT8数据之间的转换：
+$$
+scale = \frac{2 \times max(\vert x_{min} \vert, x_{max})}{Q_{max}-Q_{min}}
+$$
+
+
+$$
+offset = 0
+$$
+
+$$
+int = round( \frac{1}{scale})
+$$
+
+$$
+float = scale \times int
+$$
 
 
 
 
+## 非对称量化
+
+原始float数据与量化后的INT8数据之间的转换：
+$$
+scale = \frac{x_{max}-x_{min}}{Q_{max}-Q_{min}}
+$$
+
+$$
+offset = Q_{min} - round(\frac{x_{min}}{scale})
+$$
+
+$$
+float = scale \times (uint8 + offset)
+$$
+
+$$
+uint8 = round(\frac{float}{scale}) - offset
+$$
+MindSpore中的实现参见:
+
+- `mindspore/python/mindspore/compression/quant/quant_utils.py`
+- `mindspore/ccsrc/plugin/device/gpu/kernel/cuda_impl/cuda_ops/fake_quant_perlayer_impl.cu`
+- `mindspore/mindspore/ccsrc/plugin/device/gpu/kernel/cuda_impl/cuda_ops/fake_quant_perchannel_impl.cu`
+- `mindspore/python/mindspore/ops/_op_impl/_custom_op/fake_quant_perlayer.py`
+- `mindspore/python/mindspore/ops/_op_impl/_custom_op/fake_quant_perchannel.py`
+- `mindspore/ccsrc/plugin/device/gpu/kernel/cuda_impl/cuda_ops/minmax_update_impl.cu`
+- `mindspore/python/mindspore/ops/_op_impl/_custom_op/minmax_update_perlayer.py`
 
 
 
