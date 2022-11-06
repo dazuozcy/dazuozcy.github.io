@@ -83,3 +83,45 @@ _do_evaluate                             "mmdet/core/evaluation/eval_hooks.py:12
       	eval_map()                       "mmdet/core/evaluation/mean_ap.py:297~441"
 ```
 
+
+
+# YOLOX迁移遇到的问题
+
+主要是Dynamic Shape类问题
+
+## dataset
+
+由于数据集每张图片中`object`数量不固定，所以所模型输入tensor `gt_bboxes`和`gt_labels`的`shape`是不固定的。这就涉及到`dynamic shape`输入。彼时`MindSpore`对`dynamic shape`的支持还不完善，因此通过设置一个合理的最大`objects`数，将`gt_bboxes`和`gt_labels` padding到最大shape来规避`dynamic shape`问题。
+
+另外增加有效object的标识作为输入tensor来表示哪些索引位置的object是真实的，哪些索引处的是padding的，以方便将padding对后续计算loss的影响降到最低。
+
+
+
+## loss
+
+loss计算流程中`get_in_gt_and_in_center_info`函数里最后一个步骤：
+
+```python
+# both in boxes and centers. shape:[num_fg, num_gt]
+is_in_boxes_and_centers = (
+	is_in_gts[is_in_gts_or_centers, :] &
+    is_in_cts[is_in_gts_or_centers, :]
+	)
+```
+
+
+
+`is_in_boxes_and_centers`的shape会随`is_in_gts_or_centers`的值不同而不同，也就产生了`dynamic shape`问题，为了规避这个问题，做了如下修改：
+
+```python
+is_in_boxes_and_centers = in_gts * in_cts
+zeros = mnp.full_like(is_in_boxes_and_centers, 0)
+is_in_boxes_and_centers = P.Select()(is_in_gts_or_centers_repeat, is_in_gts_and_centers, zeros)
+```
+
+通过Select算子，将`is_in_gts_or_centers_repeat`中`True`对应的元素赋值给`is_in_gts_and_centers`，`is_in_gts_or_centers_repeat`中`False`对应的位置padding成非法值（这里就是0）。
+
+上面的例子是loss计算流程中`dynamic shape`的引入点，后续流程还有涉及到`dynamic shape`的地方，均按照同样的思想进行修改，同样要保证不影响loss的计算结果。
+
+
+

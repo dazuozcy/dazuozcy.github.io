@@ -194,3 +194,13 @@ MindSpore中的实现参见:
 - Conv+Bn融合，融合后的Bn层会被删除。
 - Bn+Mul融合，融合后的Mul层会被删除。
 - Bn+Add融合，融合后的Add层会被删除。
+
+
+
+# INT4部署时遇到的问题
+
+## 部分Conv用INT4量化后，性能比INT8劣化
+
+INT8量化时，Dequant(INT32->Fp16)和Quant(Fp16->INT8)可以融合成Requant算子。
+
+但是INT4量化时，先做mad(INT32)，然后Dequant(INT32->Fp16)和Quant(Fp16->INT4)，由于硬件没有INT32->INT4的指令，所以无法将Dequant和Quant融合成Requant算子，导致INT4相比INT8，vector计算量增大很多，所以部分Conv性能反而是负收益。

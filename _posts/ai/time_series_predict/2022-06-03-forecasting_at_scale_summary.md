@@ -348,3 +348,16 @@ $$
 用滑动窗口的循环产生训练集和测试集。
 
 ![image-20220826202014707](../../../img/forcasting_at_scale/back_test.png){: width="1086" height="542"}
+
+
+
+# Prophet
+
+- 创建`Prophet`的实例
+- 对历史数据调用`fit`方法
+- 调用`predict`方法
+
+Prophet的输入是一个`dataframe`，`dataframe`有2列：`ds`和`y`
+
+- `ds`(date stamp)，Pandas期望的格式YYYY-MM-DD或YYYY-MM-DD HH:MM:SS
+- `y`，数值
