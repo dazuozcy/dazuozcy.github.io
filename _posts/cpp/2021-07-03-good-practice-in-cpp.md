@@ -43,10 +43,10 @@ C++提供了一个叫ScopeGuard的关键技术：通过局部变量析构函数�
 
 ```cpp
 template <typename F>
-class ScopreGuard {
+class ScopeGuard {
 public:
-    ScopreGuard(F&& fn): m_fn(fn), m_active(true) {}
-    ~ScopreGuard() {
+    ScopeGuard(F&& fn): m_fn(fn), m_active(true) {}
+    ~ScopeGuard() {
         if (m_active) {
             m_fn();
         }
@@ -65,7 +65,7 @@ struct ScopeGuardOnExit {};
 
 template <typename F>
 static inline ScopeGuard<F> operator+(ScopeGuardOnExit, F&& fn) {
-    return ScopeGuard<F>(std::foward<F>(fn));
+    return ScopeGuard<F>(std::forward<F>(fn));
 }
 
 #define ON_SCOPE_EXIT \
@@ -74,6 +74,13 @@ static inline ScopeGuard<F> operator+(ScopeGuardOnExit, F&& fn) {
 #define CANCEL_SCOPRE_EXIT \
 	__onGuardExit__.dismiss()
 
+bool protcess1(char* buf) {
+    return true;
+}
+
+bool protcess2(char* buf) {
+    return true;
+}
 
 void process() {
     char* buf = (char*)malloc(512);
@@ -91,7 +98,6 @@ void process() {
         return;
     }    
 }
-
 ```
 
 
