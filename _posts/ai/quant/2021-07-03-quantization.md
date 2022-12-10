@@ -131,7 +131,7 @@ offset = 0
 $$
 
 $$
-int = round( \frac{1}{scale})
+int = round( \frac{float}{scale})
 $$
 
 $$
