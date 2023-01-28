@@ -75,4 +75,5 @@ B* pb = reinterpret_cast<B*>(pa); //相当于B* pb = (B*)pa;
 long l = reinterpret_cast<long>(pi); //相当于long l = (long)pi;
 ```
 
-### 类指针如何用C++转换类别，如A* a如何转换到B*，是否所有的指针都可用dynamic_cast进行转换。
+**类指针如何用C++转换类别，如A* a如何转换到B*，是否所有的指针都可用dynamic_cast进行转换**。
+
