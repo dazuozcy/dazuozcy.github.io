@@ -40,7 +40,7 @@ index 9db48047fe..a68a86fe5a 100644
 
 可以看出第一个epoch的每个算子日志中都出现了`Cache Missed`字样，因为是第一次编译。第二个epoch开始，日志中都出现了`Cache Hitted`。
 
-```shell
+```verilog
 [ERROR] DEVICE(20547,7f3e6fbd1740,python):2022-10-22-19:14:33.022.511 [mindspore/ccsrc/runtime/pynative/op_compiler.cc:75] Compile] Cache Missed: CPU_Conv2D[const vector][32, 1, 32, 32]43_[const vector][6, 1, 5, 5]43_(5, 5)16[x, w](0, 0, 0, 0)2NCHW(0, 0, 0, 0)1(1, 1, 1, 1)1(1, 1, 1, 1)[output]
 [ERROR] DEVICE(20547,7f3e6fbd1740,python):2022-10-22-19:14:33.023.712 [mindspore/ccsrc/runtime/pynative/op_compiler.cc:75] Compile] Cache Missed: CPU_ReLU[const vector][32, 6, 28, 28]4343DefaultFormat_[output][x]
 [ERROR] DEVICE(20547,7f3e6fbd1740,python):2022-10-22-19:14:33.024.327 [mindspore/ccsrc/runtime/pynative/op_compiler.cc:75] Compile] Cache Missed: CPU_MaxPool[const vector][32, 6, 28, 28]4343DefaultFormat_2[output](1, 1, 2, 2)NCHW(1, 1, 2, 2)[x]
