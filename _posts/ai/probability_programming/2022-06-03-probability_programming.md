@@ -33,7 +33,7 @@ mermaid: true
 
 随机变量`rv`带有一个概率分布，它是一个`TF`分布实例，用于控制随机变量的方法，例如`log_prob`和`sample`.
 
-默认情况下，实例化一个随机变量rv会创建一个采样操作以形成Tensor rv.value ~ rv.distribution.sample()。默认样本数(可通过rv的sample shape参数控制)为1。如果提供了可选的value参数，则不会创建采样操作。
+默认情况下，实例化一个随机变量`rv`会创建一个采样操作以形成`Tensor` `rv.value` ~ `rv.distribution.sample()`。默认样本数(可通过`rv`的`sample shape`参数控制)为1。如果提供了可选的`value`参数，则不会创建采样操作。
 
 
 
