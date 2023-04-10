@@ -31,7 +31,7 @@ if (Anyone(s, "spring", "summer", "autumn", "winter")) {
 
 
 # RAII与pImpl
-RAII(Resource Acquisition Is Initializationb)，也称为"资源获取即初始化"，是C++里一种资源管理，避免泄漏的惯用法。
+`RAII`(`Resource Acquisition Is Initialization`)，也称为"资源获取即初始化"，是C++里一种资源管理，避免泄漏的惯用法。
 
 C++标准保证在任何情况下，已构造的对象最终会被销毁，即对象的析构函数最终会被调用。
 
@@ -39,7 +39,7 @@ C++标准保证在任何情况下，已构造的对象最终会被销毁，即�
 
 ### ScopeGuard
 
-C++提供了一个叫ScopeGuard的关键技术：通过局部变量析构函数来管理资源，根据是否正常退出来决定是否需要清理资源。
+C++提供了一个叫`ScopeGuard`的关键技术：通过局部变量析构函数来管理资源，根据是否正常退出来决定是否需要清理资源。
 
 ```cpp
 template <typename F>
@@ -129,7 +129,7 @@ void process() {
 
 
 # CRTP
-CRTP(Curiously Recurring Template Pattern): 奇异递归模板模式.
+`CRTP`(`Curiously Recurring Template Pattern`): 奇异递归模板模式.
 
 
 ## 基本形式
